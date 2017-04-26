@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+
+cp /vagrant/mongodb.service /etc/systemd/system/
+systemctl start mongodb
+systemctl status mongodb
+systemctl enable mongodb
+echo "Comment out 'bindIp: 127.0.0.1' in '/etc/mongodb.conf' and then execute 'sudo systemctl restart mongodb'"
+

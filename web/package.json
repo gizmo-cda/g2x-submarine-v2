@@ -1,0 +1,27 @@
+{
+  "name": "g2x-submarine-webserver",
+  "version": "0.0.1",
+  "description": "A web server for the G2X deep dive submarine used to show sensor data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/gizmo-cda/g2x-submarine-v2.git"
+  },
+  "keywords": [
+    "submarine",
+    "Gizmo2Xtremes"
+  ],
+  "author": "Kevin Lindsey <kevin@kevlindev.com>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/gizmo-cda/g2x-submarine-v2/issues"
+  },
+  "homepage": "https://github.com/gizmo-cda/g2x-submarine-v2#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "mongodb": "^2.2.26"
+  }
+}

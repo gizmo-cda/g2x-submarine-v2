@@ -4,6 +4,7 @@
   "description": "A web server for the G2X deep dive submarine used to show sensor data",
   "main": "index.js",
   "scripts": {
+    "watch": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,7 +22,10 @@
   },
   "homepage": "https://github.com/gizmo-cda/g2x-submarine-v2#readme",
   "dependencies": {
+    "body-parser": "^1.17.1",
     "express": "^4.15.2",
-    "mongodb": "^2.2.26"
+    "mongodb": "^2.2.26",
+    "morgan": "^1.8.1",
+    "mustache-express": "^1.2.4"
   }
 }

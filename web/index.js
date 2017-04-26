@@ -1,33 +1,30 @@
-let MongoClient = require('mongodb').MongoClient,
-	util = require('util');
+let express = require('express'),
+	bodyParser = require('body-parser'),
+	morgan = require('morgan'),
+	mustacheExpress = require('mustache-express'),
 
-// create sample connfiguration
-let config = {
-	"mongo": {
-		"host": "localhost",
-		"port": 27017,
-		"db": "g2x"
-	}
-}
-let mongo = config.mongo;
+	path = require('path');
 
-// build mongodb url
-let url = util.format("mongodb://%s:%s/%s", mongo.host, mongo.port, mongo.db);
+// create app
+var app = express();
 
-// connect to mongo server
-MongoClient.connect(url, function(err, db) {
-	console.log("Connected successfully to server");
+// app configuration
+app.set('port', (process.env.PORT || 8081));
 
-	let values = db.collection("values");
+// setup template configuration
+app.engine('mustache', mustacheExpress());
+app.set('view engine', 'mustache');
+app.set('views', path.join(__dirname, 'views'));
 
-	values.insertOne({
-			time: new Date(),
-			property: "temperature",
-			value: 43.3
-		},
-		(err, result) => {
-			console.log("Inserted documents into the collection");
-		 	db.close();
-		}
-	);
+// config middleware
+app.use(morgan('dev'));
+
+// config routes
+require('./routes/static')(app);
+
+// start server
+var server = app.listen(app.get('port'), function() {
+	var port = server.address().port;
+
+	console.log("Server listening on port %s", port);
 });

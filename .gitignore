@@ -1,4 +1,7 @@
-.vagrant/
 *.log
 
+.vagrant/
+
 .env
+
+node_modules/

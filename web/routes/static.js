@@ -1,5 +1,5 @@
 module.exports = function(app) {
-	app.get('/', function(req, res, next) {
+	app.get('/', (req, res, next) => {
 		res.render(
 			'index.html.mustache',
 			{

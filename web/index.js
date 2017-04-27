@@ -3,7 +3,18 @@ let express = require('express'),
 	morgan = require('morgan'),
 	mustacheExpress = require('mustache-express'),
 
-	path = require('path');
+	path = require('path'),
+
+	db = require('./lib/db');
+
+// load configuration
+let config = {
+	"mongo": {
+		"host": "192.168.0.128",
+		"port": 27017,
+		"db": "g2x"
+	}
+}
 
 // create app
 var app = express();
@@ -11,15 +22,16 @@ var app = express();
 // app configuration
 app.set('port', (process.env.PORT || 8081));
 
-// setup template configuration
+// configure template engine
 app.engine('mustache', mustacheExpress());
 app.set('view engine', 'mustache');
 app.set('views', path.join(__dirname, 'views'));
 
-// config middleware
+// configure middleware
 app.use(morgan('dev'));
+app.use(express.static('public'));
 
-// config routes
+// configure routes
 require('./routes/static')(app);
 
 // start server
@@ -27,4 +39,13 @@ var server = app.listen(app.get('port'), function() {
 	var port = server.address().port;
 
 	console.log("Server listening on port %s", port);
+
+	db(config.mongo, (err, db) => {
+		if (err) {
+			console.error(err);
+			process.exit(1);
+		}
+
+		console.log("Connected to mongo server:", config.mongo);
+	});
 });

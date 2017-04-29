@@ -15,9 +15,12 @@
 			xhr.get('/imu', update);
 		}
 
-		function update(data) {
-			text.innerText = data;
-			setTimeout(refresh, 1000);
+		function update(err, data) {
+			text.innerText = JSON.stringify(data, null, 2);
+
+			if (data.status == 200) {
+				setTimeout(refresh, 1000);
+			}
 		}
 	</script>
 </head>

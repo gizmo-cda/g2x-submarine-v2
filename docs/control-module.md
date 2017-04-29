@@ -34,4 +34,16 @@
 - `sudo apt-get install vim`
 - `sudo apt-get install netatalk`
 - `sudo pip3 pymongo`
+- `sudo apt-get install i2c-tools`
 
+## I2C Addresses
+
+### Sense Hat
+
+| id      | Chip     | Role |
+| ------- | ----     | ---- |
+| 1C      | LSM9DS1  | IMU  |
+| 46 (UU) | LED2472G | LEDs |
+| 5C      | LPS25H   | Pressure/Temperature Sensor |
+| 5F      | HTS221   | Humidity/Temperature Sensor |
+| 6A      | LSM9DS1  | IMU  |

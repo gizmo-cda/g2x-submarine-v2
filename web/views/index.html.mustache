@@ -1,8 +1,28 @@
 <html>
 <head>
 	{{> header.html}}
+	<script type="text/ecmascript" src="js/xhr.js"></script>
+	<script type="text/ecmascript">
+		var text;
+
+		function init() {
+			text = document.getElementById("text");
+
+			refresh();
+		}
+
+		function refresh() {
+			xhr.get('/imu', update);
+		}
+
+		function update(data) {
+			text.innerText = data;
+			setTimeout(refresh, 1000);
+		}
+	</script>
 </head>
-<body>
-	<h1>Gizmo2Xtremes Deep Dive Submarine</h1>
+<body onload="init()">
+	<h1>G2X Submarine</h1>
+	<pre id="text"></pre>
 </body>
 </html>

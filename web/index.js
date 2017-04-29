@@ -21,6 +21,7 @@ var app = express();
 
 // app configuration
 app.set('port', (process.env.PORT || 8081));
+app.set('db', db);
 
 // configure template engine
 app.engine('mustache', mustacheExpress());

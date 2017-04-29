@@ -21,7 +21,6 @@ var app = express();
 
 // app configuration
 app.set('port', (process.env.PORT || 8081));
-app.set('db', db);
 
 // configure template engine
 app.engine('mustache', mustacheExpress());
@@ -34,6 +33,7 @@ app.use(express.static('public'));
 
 // configure routes
 require('./routes/static')(app);
+require('./routes/imu')(app);
 
 // start server
 var server = app.listen(app.get('port'), function() {
@@ -47,6 +47,7 @@ var server = app.listen(app.get('port'), function() {
 			process.exit(1);
 		}
 
+		app.set('db', db);
 		console.log("Connected to mongo server:", config.mongo);
 	});
 });

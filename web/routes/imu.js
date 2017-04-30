@@ -4,9 +4,13 @@ module.exports = function(app) {
 		let compass = db.collection('compass');
 
 		if (compass !== undefined) {
-			compass.find({}).toArray((err, docs) => {
-				res.end(JSON.stringify(docs));
-			});
+			compass
+				.find({})
+				.skip(compass.count() - 1)
+				.limit(1)
+				.toArray((err, docs) => {
+					res.end(JSON.stringify(docs[0]));
+				});
 		}
 		else {
 			res.end(JSON.stringify({

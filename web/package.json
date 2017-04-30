@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/gizmo-cda/g2x-submarine-v2#readme",
   "dependencies": {
+    "async": "^2.4.0",
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "mongodb": "^2.2.26",

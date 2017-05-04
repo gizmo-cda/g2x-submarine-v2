@@ -35,6 +35,15 @@
 - `sudo apt-get install netatalk`
 - `sudo pip3 pymongo`
 - `sudo apt-get install i2c-tools`
+- setup .ssh directory on Raspberry Pi
+```
+cd ~
+install -d -m 700 ~/.ssh
+```
+- Send ssh key to Pi from client machine
+```
+cat ~/.ssh/id_rsa.pub | ssh <USERNAME>@<IP-ADDRESS> 'cat >> .ssh/authorized_keys'
+```
 
 ## I2C Addresses
 
@@ -42,8 +51,8 @@
 
 | id      | Chip     | Role |
 | ------- | ----     | ---- |
-| 1C      | LSM9DS1  | IMU  |
-| 46 (UU) | LED2472G | LEDs |
-| 5C      | LPS25H   | Pressure/Temperature Sensor |
-| 5F      | HTS221   | Humidity/Temperature Sensor |
-| 6A      | LSM9DS1  | IMU  |
+| 1C      | LSM9DS1  | IMU - Magnetometer            |
+| 46 (UU) | LED2472G | LEDs                          |
+| 5C      | LPS25H   | Pressure/Temperature Sensor   |
+| 5F      | HTS221   | Humidity/Temperature Sensor   |
+| 6A      | LSM9DS1  | IMU - Accelerometer/Gyroscope |

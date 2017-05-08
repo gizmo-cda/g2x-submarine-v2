@@ -2,6 +2,27 @@
 
 # for command formats, see http://www.gpsinformation.org/dale/nmea.htm
 import serial
+from datetime import datetime, tzinfo, timedelta
+
+
+class Zone(tzinfo):
+    def __init__(self, offset, isdst, name):
+        self.offset = offset
+        self.isdst = isdst
+        self.name = name
+
+    def utcoffset(self, dt):
+        return timedelta(hours=self.offset) + self.dst(dt)
+
+    def dst(self, dt):
+        return timedelta(hours=1) if self.isdst else timedelta(0)
+
+    def tzname(self, dt):
+        return self.name
+
+
+GMT = Zone(0, False, 'GMT')
+PDT = Zone(-8, True, 'PDT')
 
 
 def parseGGA(line):
@@ -69,7 +90,24 @@ def parseRMC(line):
     '''
     (cmd, fix, status, lat, lat_compass, lng, lng_compass, knots, track_angle, date, mag, mag_compass, checksum) = line.split(",")
 
-    print(date, fix, lat + lat_compass, lng + lng_compass, track_angle)
+    hour = fix[0:2]
+    minutes = fix[2:4]
+    seconds = fix[4:6]
+    day = date[0:2]
+    month = date[2:4]
+    year = "20" + date[4:6]
+    datestring = "{}-{}-{}T{}:{}:{}-0000".format(year, month, day, hour, minutes, seconds)
+
+    utc_time = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
+    utc_time_aware = utc_time.replace(tzinfo=GMT)
+    local_time_aware = utc_time_aware.astimezone(PDT)
+    # timestamp = local_time_aware.strftime("%s")
+    # print(utc_time)
+    # print(utc_time_aware)
+    # print(local_time_aware)
+    # print(timestamp)
+
+    print(local_time_aware, lat + lat_compass, lng + lng_compass, track_angle)
 
 
 def parseVTG(line):

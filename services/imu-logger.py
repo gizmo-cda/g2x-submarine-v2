@@ -8,7 +8,7 @@ import time
 DELAY = 1   # in seconds
 
 sense = SenseHat()
-client = MongoClient("mongodb://192.168.0.128:27017")
+client = MongoClient("mongodb://10.0.1.25:27017")
 db = client.g2x
 
 while True:

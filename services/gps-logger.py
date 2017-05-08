@@ -3,6 +3,7 @@
 # for command formats, see http://www.gpsinformation.org/dale/nmea.htm
 import serial
 from datetime import datetime, tzinfo, timedelta
+from pymongo import MongoClient
 
 
 class Zone(tzinfo):
@@ -19,10 +20,6 @@ class Zone(tzinfo):
 
     def tzname(self, dt):
         return self.name
-
-
-GMT = Zone(0, False, 'GMT')
-PDT = Zone(-8, True, 'PDT')
 
 
 def parseGGA(line):
@@ -107,6 +104,14 @@ def parseRMC(line):
     # print(local_time_aware)
     # print(timestamp)
 
+    db.gps.insert_one({
+        "timestamp": local_time_aware,
+        "latitude": lat,
+        "latitude_compass": lat_compass,
+        "longitude": lng,
+        "longitude_compass": lng_compass,
+        "track_angle": track_angle
+    })
     print(local_time_aware, lat + lat_compass, lng + lng_compass, track_angle)
 
 
@@ -145,6 +150,9 @@ def parseGSV(line):
     '''
 
 
+GMT = Zone(0, False, 'GMT')
+PDT = Zone(-8, True, 'PDT')
+
 handlers = {
     "GGA": parseGGA,
     "GSA": parseGSA,
@@ -152,6 +160,9 @@ handlers = {
     "VTG": parseVTG,
     "GSV": parseGSV
 }
+
+client = MongoClient("mongodb://10.0.1.25:27017")
+db = client.g2x
 
 ser = serial.Serial()
 ser.port = "/dev/ttyUSB0"

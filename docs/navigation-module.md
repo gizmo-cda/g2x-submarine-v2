@@ -50,6 +50,7 @@ cat ~/.ssh/id_rsa.pub | ssh <USERNAME>@<IP-ADDRESS> 'cat >> .ssh/authorized_keys
 ### Sense Hat
 
 - [Python Library Source](https://github.com/RPi-Distro/python-sense-hat)
+- [RTIMULib Source](https://github.com/RPi-Distro/RTIMULib)
 
 | id      | Chip     | Role |
 | ------- | ----     | ---- |

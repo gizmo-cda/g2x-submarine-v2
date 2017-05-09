@@ -2,37 +2,59 @@
 
 from sense_hat import SenseHat
 from pymongo import MongoClient
-import time
+from datetime import datetime
 
-
-DELAY = 1   # in seconds
 
 sense = SenseHat()
 client = MongoClient("mongodb://10.0.1.25:27017")
 db = client.g2x
 
+last_time = datetime.utcnow()
+sample_count = 0
+
 while True:
-    orientation = sense.get_orientation_degrees()
-    print(orientation)
+    current_time = datetime.utcnow()
+    elapsed_time = current_time - last_time
+
+    orientation = sense.get_orientation()
+    gyroscope = sense.get_gyroscope()
     acceleration = sense.get_accelerometer()
     compass = sense.get_compass()
     temperature_from_humidity = sense.get_temperature()
     temperature_from_pressure = sense.get_temperature_from_pressure()
 
-    db.gyroscope.insert_one({
-        "pitch": orientation["pitch"],
-        "roll": orientation["roll"],
-        "yaw": orientation["yaw"]
-    })
-    db.accelerometer.insert_one({
-        "pitch": acceleration["pitch"],
-        "roll": acceleration["roll"],
-        "yaw": acceleration["yaw"]
-    })
-    db.compass.insert_one({"angle": compass})
-    db.temperature.insert_one({
-        "from_humidity": temperature_from_humidity,
-        "from_pressure": temperature_from_pressure
-    })
+    sample_count += 1
 
-    time.sleep(DELAY)
+    if elapsed_time.seconds >= 1:
+        last_time = current_time
+
+        print("sample per second =", sample_count)
+        print("orientation =", orientation)
+        print("gyroscope =", gyroscope)
+        print("acceleration =", acceleration)
+        print("compass =", compass)
+        print("temperature_from_humidity =", temperature_from_humidity)
+        print("temperature_from_pressure =", temperature_from_pressure)
+
+        sample_count = 0
+
+        db.orientation.insert_one({
+            "pitch": orientation["pitch"],
+            "roll": orientation["roll"],
+            "yaw": orientation["yaw"]
+        })
+        db.gyroscope.insert_one({
+            "pitch": gyroscope["pitch"],
+            "roll": gyroscope["roll"],
+            "yaw": gyroscope["yaw"]
+        })
+        db.accelerometer.insert_one({
+            "pitch": acceleration["pitch"],
+            "roll": acceleration["roll"],
+            "yaw": acceleration["yaw"]
+        })
+        db.compass.insert_one({"angle": compass})
+        db.temperature.insert_one({
+            "from_humidity": temperature_from_humidity,
+            "from_pressure": temperature_from_pressure
+        })

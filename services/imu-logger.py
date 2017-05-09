@@ -17,8 +17,8 @@ while True:
     elapsed_time = current_time - last_time
 
     orientation = sense.get_orientation()
-    gyroscope = sense.get_gyroscope()
-    acceleration = sense.get_accelerometer()
+    gyroscope = sense.get_gyroscope_raw()
+    acceleration = sense.get_accelerometer_raw()
     compass = sense.get_compass()
     temperature_from_humidity = sense.get_temperature()
     temperature_from_pressure = sense.get_temperature_from_pressure()
@@ -44,14 +44,14 @@ while True:
             "yaw": orientation["yaw"]
         })
         db.gyroscope.insert_one({
-            "pitch": gyroscope["pitch"],
-            "roll": gyroscope["roll"],
-            "yaw": gyroscope["yaw"]
+            "x": gyroscope["x"],
+            "y": gyroscope["y"],
+            "z": gyroscope["z"]
         })
         db.accelerometer.insert_one({
-            "pitch": acceleration["pitch"],
-            "roll": acceleration["roll"],
-            "yaw": acceleration["yaw"]
+            "x": acceleration["x"],
+            "y": acceleration["y"],
+            "z": acceleration["z"]
         })
         db.compass.insert_one({"angle": compass})
         db.temperature.insert_one({

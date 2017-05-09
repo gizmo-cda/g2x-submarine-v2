@@ -4,19 +4,37 @@
 	<script type="text/ecmascript" src="js/xhr.js"></script>
 	<script type="text/ecmascript">
 		var text;
+		var needle;
 
 		function init() {
 			text = document.getElementById("text");
+			needle = document.getElementById("needle");
 
 			refresh();
 		}
 
 		function refresh() {
-			xhr.get('/imu', update);
+			xhr.get('/nav', update);
 		}
 
 		function update(err, data) {
 			text.innerText = JSON.stringify(data, null, 2);
+
+			if ("compass" in data) {
+				let compass = data.compass;
+
+				if ("angle" in compass) {
+					let angle = compass.angle
+
+					angle -= 90.0
+
+					if (angle < 0.0) {
+						angle += 360.0
+					}
+
+					needle.setAttribute("transform", "rotate(" + angle + ")");
+				}
+			}
 
 			if ("status" in data === false || data.status != 500) {
 				setTimeout(refresh, 1000);
@@ -27,5 +45,13 @@
 <body onload="init()">
 	<h1>G2X Submarine</h1>
 	<pre id="text"></pre>
+	<svg xmlns="http://www.w3.org/2000/svg">
+		<g transform="translate(30,30)">
+			<circle r="30" fill="green" />
+			<g id="needle" transform="rotate(0)">
+				<line x2="30" stroke="red" stroke-width="2"/>
+			</g>
+		</g>
+	</svg>
 </body>
 </html>

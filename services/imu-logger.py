@@ -26,9 +26,7 @@ while True:
     sample_count += 1
 
     if elapsed_time.seconds >= 1:
-        last_time = current_time
-
-        print("sample per second =", sample_count)
+        print("samples per second =", sample_count)
         print("orientation =", orientation)
         print("gyroscope =", gyroscope)
         print("acceleration =", acceleration)
@@ -36,6 +34,7 @@ while True:
         print("temperature_from_humidity =", temperature_from_humidity)
         print("temperature_from_pressure =", temperature_from_pressure)
 
+        last_time = current_time
         sample_count = 0
 
         db.orientation.insert_one({
@@ -53,7 +52,9 @@ while True:
             "y": acceleration["y"],
             "z": acceleration["z"]
         })
-        db.compass.insert_one({"angle": compass})
+        db.compass.insert_one({
+            "angle": compass
+        })
         db.temperature.insert_one({
             "from_humidity": temperature_from_humidity,
             "from_pressure": temperature_from_pressure

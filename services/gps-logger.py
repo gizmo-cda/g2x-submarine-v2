@@ -22,6 +22,27 @@ class Zone(tzinfo):
         return self.name
 
 
+def make_local_datetime(fix, date):
+    hour = fix[0:2]
+    minutes = fix[2:4]
+    seconds = fix[4:6]
+    day = date[0:2]
+    month = date[2:4]
+    year = "20" + date[4:6]
+    datestring = "{}-{}-{}T{}:{}:{}-0000".format(year, month, day, hour, minutes, seconds)
+
+    utc_time = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
+    utc_time_aware = utc_time.replace(tzinfo=GMT)
+    local_time_aware = utc_time_aware.astimezone(PDT)
+    # timestamp = local_time_aware.strftime("%s")
+    # print(utc_time)
+    # print(utc_time_aware)
+    # print(local_time_aware)
+    # print(timestamp)
+
+    return local_time_aware
+
+
 def parseGGA(line):
     '''
     $GPGGA,003907.000,4741.0757,N,11647.1921,W,2,08,1.10,670.1,M,-16.9,M,0000,0000*56
@@ -48,7 +69,21 @@ def parseGGA(line):
     0000         DGPS station ID number
     *56          the checksum data, always begins with *
     '''
-    pass
+    (cmd, fix, lat, lat_compass, lng, lng_compass, fix_quality, sat_count, dilution, alt, alt_units, _, _, _, _) = line.split(",")
+
+    feet = str(round(float(alt) * 3.28084, 3))
+
+    db.gps.insert_one({
+        "latitude": float(lat),
+        "latitude_compass": lat_compass,
+        "longitude": float(lng),
+        "longitude_compass": lng_compass,
+        "altitude": feet,
+        "altitude_units": "ft",
+        "fix_quality": int(fix_quality),
+        "satellite_count": int(sat_count)
+    })
+    print(lat + lat_compass, lng + lng_compass, feet + "ft", int(fix_quality), int(sat_count))
 
 
 def parseGSA(line):
@@ -87,22 +122,7 @@ def parseRMC(line):
     '''
     (cmd, fix, status, lat, lat_compass, lng, lng_compass, knots, track_angle, date, mag, mag_compass, checksum) = line.split(",")
 
-    hour = fix[0:2]
-    minutes = fix[2:4]
-    seconds = fix[4:6]
-    day = date[0:2]
-    month = date[2:4]
-    year = "20" + date[4:6]
-    datestring = "{}-{}-{}T{}:{}:{}-0000".format(year, month, day, hour, minutes, seconds)
-
-    utc_time = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
-    utc_time_aware = utc_time.replace(tzinfo=GMT)
-    local_time_aware = utc_time_aware.astimezone(PDT)
-    # timestamp = local_time_aware.strftime("%s")
-    # print(utc_time)
-    # print(utc_time_aware)
-    # print(local_time_aware)
-    # print(timestamp)
+    local_time_aware = make_local_datetime(fix, date)
 
     db.gps.insert_one({
         "timestamp": local_time_aware,
@@ -148,6 +168,7 @@ def parseGSV(line):
                  for up to 4 satellites per sentence
     *79          the checksum data, always begins with *
     '''
+    pass
 
 
 GMT = Zone(0, False, 'GMT')

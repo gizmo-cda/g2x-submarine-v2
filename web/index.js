@@ -10,7 +10,7 @@ let express = require('express'),
 // load configuration
 let config = {
 	"mongo": {
-		"host": "192.168.0.128",
+		"host": "localhost",
 		"port": 27017,
 		"db": "g2x"
 	}
@@ -33,7 +33,7 @@ app.use(express.static('public'));
 
 // configure routes
 require('./routes/static')(app);
-require('./routes/imu')(app);
+require('./routes/nav')(app);
 
 // start server
 var server = app.listen(app.get('port'), function() {

@@ -49,6 +49,8 @@ cat ~/.ssh/id_rsa.pub | ssh <USERNAME>@<IP-ADDRESS> 'cat >> .ssh/authorized_keys
 
 ### Sense Hat
 
+- [Python Library Source](https://github.com/RPi-Distro/python-sense-hat)
+
 | id      | Chip     | Role |
 | ------- | ----     | ---- |
 | 1C      | LSM9DS1  | IMU - Magnetometer            |

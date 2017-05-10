@@ -1,3 +1,6 @@
+var canvas;
+var gl;
+
 function initGL() {
 	canvas = document.getElementById('vessel');
 	gl = canvas.getContext('webgl');

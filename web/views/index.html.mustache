@@ -6,8 +6,6 @@
 	<script type="text/javascript">
 		var text;
 		var needle;
-		var canvas;
-		var gl;
 
 		function init() {
 			text = document.getElementById("text");
@@ -62,9 +60,9 @@
 	</script>
 </head>
 <body onload="init()">
-	<div style="position: relative;">
-		<img class="mjpeg" src="http://192.168.0.1:8080/stream/video.mjpeg" width="85%" height="85%"/>
-		<div style="position: absolute; top: 0; left: 0">
+	<div class="container">
+		<img class="mjpeg" src="http://192.168.0.1:8080/stream/video.mjpeg" width="972" height="830"/>
+		<div class="overlay">
 			<pre id="text"></pre>
 			<svg xmlns="http://www.w3.org/2000/svg" id="compass" width="60" height="60" viewbox="0 0 60 60">
 				<g transform="translate(30,30)">

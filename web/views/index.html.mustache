@@ -43,15 +43,19 @@
 	</script>
 </head>
 <body onload="init()">
-	<h1>G2X Submarine</h1>
-	<pre id="text"></pre>
-	<svg xmlns="http://www.w3.org/2000/svg">
-		<g transform="translate(30,30)">
-			<circle r="30" fill="green" />
-			<g id="needle" transform="rotate(0)">
-				<line x2="30" stroke="red" stroke-width="2"/>
-			</g>
-		</g>
-	</svg>
+	<div style="position: relative;">
+		<img class="mjpeg" src="http://10.0.1.41:8080/stream/video.mjpeg" />
+		<div style="position: absolute; top: 0; left: 0">
+			<pre id="text"></pre>
+			<svg xmlns="http://www.w3.org/2000/svg">
+				<g transform="translate(30,30)">
+					<circle r="30" fill="green" />
+					<g id="needle" transform="rotate(0)">
+						<line x2="30" stroke="red" stroke-width="2" />
+					</g>
+				</g>
+			</svg>
+		</div>
+	</div>
 </body>
 </html>

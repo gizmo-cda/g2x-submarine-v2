@@ -8,3 +8,6 @@
 .env
 
 node_modules/
+
+scratchpad/video-tests/video/
+

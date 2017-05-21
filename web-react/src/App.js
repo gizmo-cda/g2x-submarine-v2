@@ -1,16 +1,49 @@
 import React, { Component } from 'react';
 import './App.css';
 import LineChart from './components/LineChart';
-import data from './data';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <LineChart data={data}/>
-      </div>
-    );
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: []
+        };
+    }
+
+    componentDidMount() {
+        this.intervalId = setInterval(
+            () => this.tick(),
+            1000
+        );
+    }
+
+    componentWillUnount() {
+        clearInterval(this.intervalId);
+    }
+
+    tick() {
+        var t = Date.now();
+        var data = [];
+
+        for (var i = 10; i < 100; i += 10) {
+            var value = ((i + t * 0.25) % 80) + 10;
+
+            data.push([i, value]);
+        }
+
+        this.setState({ data: data });
+    }
+
+    render() {
+        var data = this.state.data;
+
+        return (
+            <div className="App">
+                <LineChart label="-- ft" data={data}/>
+                <LineChart label="-- °F" data={data}/>
+            </div>
+        );
+    }
 }
 
 export default App;

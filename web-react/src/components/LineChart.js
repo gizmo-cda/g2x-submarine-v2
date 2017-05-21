@@ -12,7 +12,7 @@ class LineChart extends React.Component {
         padding: 10,
         data: [],
         path_color: "rgb(255,128,0)",
-        label: "-- ft"
+        label: ""
     };
 
     render() {

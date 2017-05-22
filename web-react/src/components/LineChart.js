@@ -15,13 +15,13 @@ class LineChart extends React.Component {
     };
 
     render() {
-        let x                  = this.props.x,
-            y                  = this.props.y,
-            width              = this.props.width,
-            height             = this.props.height,
-            data               = this.props.data,
-            path_color         = this.props.path_color,
-            label_text         = this.props.label;
+        let x          = this.props.x,
+            y          = this.props.y,
+            width      = this.props.width,
+            height     = this.props.height,
+            data       = this.props.data,
+            color      = this.props.path_color,
+            label_text = this.props.label;
 
         var path_string = "";
 
@@ -32,8 +32,8 @@ class LineChart extends React.Component {
         return (
             <svg x={x} y={y} width={width} height={height}>
                 <Background />
-                <path d={path_string} stroke={path_color} fill="none" />
-                <Label x={width * 0.5} y={height} alignment="center">{label_text}</Label>
+                <path d={path_string} stroke={color} fill="none" />
+                <Label x={width * 0.5} y={height - 1} alignment="center">{label_text}</Label>
             </svg>
         )
     }

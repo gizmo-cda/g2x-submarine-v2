@@ -53,11 +53,17 @@ class App extends Component {
         var depth = this.state.depth;
         var temperature = this.state.temperature;
         var direction = `rotate(${-this.state.compass})`;
+        var depthLabel = depth.length > 0
+            ? depth[depth.length - 1][1] + " ft"
+            : "-- ft";
+        var temperatureLabel = temperature.length > 0
+            ? temperature[temperature.length - 1][1] + " °F"
+            : "-- °F";
 
         return (
             <div className="App">
-                <LineChart label="-- ft" data={depth}/>
-                <LineChart label="-- °F" data={temperature}/>
+                <LineChart label={depthLabel} data={depth}/>
+                <LineChart label={temperatureLabel} data={temperature}/>
                 <Compass direction={direction}/>
             </div>
         );

@@ -6,7 +6,7 @@ class Label extends React.Component {
         y: 0,
         font_size: 14,
         alignment: "start",
-        color: "rgb(0,0,0)"
+        color: "rgb(54,54,54)"
     }
 
     render() {

@@ -31,7 +31,7 @@ class LineChart extends React.Component {
             <svg x={x} y={y} width={width} height={height}>
                 <Background />
                 <path d={path_string} stroke={color} fill="none" />
-                <Label x={width * 0.5} y={height - 1} alignment="center">{label_text}</Label>
+                <Label x={width * 0.5} y={height - 1} alignment="middle">{label_text}</Label>
             </svg>
         )
     }

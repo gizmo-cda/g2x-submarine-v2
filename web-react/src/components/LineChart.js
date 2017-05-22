@@ -4,14 +4,14 @@ import Label from './Label';
 
 class LineChart extends React.Component {
     static defaultProps = {
-        x: 10,
-        y: 10,
-        width: 100,
-        height: 100,
-        padding: 10,
-        data: [],
+        x:          10,
+        y:          10,
+        width:      100,
+        height:     100,
+        padding:    10,
+        data:       [],
         path_color: "rgb(255,128,0)",
-        label: ""
+        label:      ""
     };
 
     render() {
@@ -23,11 +23,9 @@ class LineChart extends React.Component {
             color      = this.props.path_color,
             label_text = this.props.label;
 
-        var path_string = "";
-
-        if (data.length > 0) {
-            path_string = "M" + data.map(p => `${p[0]},${p[1]}`).join(" ");
-        }
+        var path_string = data.length > 0
+            ? "M" + data.map(p => `${p[0]},${p[1]}`).join(" ")
+            : "";
 
         return (
             <svg x={x} y={y} width={width} height={height}>

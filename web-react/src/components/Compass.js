@@ -1,5 +1,4 @@
 import React from 'react';
-import Background from './Background'
 
 class Compass extends React.Component {
     static defaultProps = {
@@ -20,8 +19,7 @@ class Compass extends React.Component {
             offset      = `translate(${radius - 6 - 1}, 0)`;
 
         return (
-            <svg width={width} height={height}>
-                <Background />
+            <svg className="compass" width={width} height={height}>
                 <g transform={origin}>
                     <circle r={radius} stroke={color} strokeWidth={1} fill="none"/>
                     <g transform={this.props.direction}>

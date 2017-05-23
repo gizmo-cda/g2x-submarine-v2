@@ -1,5 +1,4 @@
 import React from 'react';
-import Background from './Background'
 import Label from './Label';
 
 class LineChart extends React.Component {
@@ -28,8 +27,7 @@ class LineChart extends React.Component {
             : "";
 
         return (
-            <svg x={x} y={y} width={width} height={height}>
-                <Background />
+            <svg className="lineChart" x={x} y={y} width={width} height={height}>
                 <path d={path_string} stroke={color} fill="none" />
                 <Label x={width * 0.5} y={height - 1} alignment="middle">{label_text}</Label>
             </svg>

@@ -5,16 +5,25 @@ import OBJViewer from '../3d/OBJViewer';
 let ANGLE_STEP = 2.0 * Math.PI / 5;
 
 class Viewer3D extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.tick = this.tick.bind(this);
+	}
+
 	componentDidMount() {
 		this.viewer = new OBJViewer(this.refs.canvas, submarine);
 		this.angle = 0.0;
 		this.last = Date.now();
-		this.tick = this.tick.bind(this);
+		this.running = true;
 
 		this.tick();
 	}
 
 	componentWillUnount() {
+		this.running = false;
+
+		// TODO: tell viewer to free its resources
 	}
 
 	tick() {
@@ -28,7 +37,9 @@ class Viewer3D extends React.Component {
 
 		this.viewer.render(this.angle);
 
-		requestAnimationFrame(this.tick, this.refs.canvas);
+		if (this.running) {
+			requestAnimationFrame(this.tick, this.refs.canvas);
+		}
 	}
 
 	render() {

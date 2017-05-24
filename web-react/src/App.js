@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import LineChart from './components/LineChart';
 import Compass from './components/Compass';
+import Viewer3D from './components/Viewer3D';
 
 function generateData(frequency, trigFunction) {
     var t = Date.now();
@@ -65,11 +66,12 @@ class App extends Component {
 
         return (
             <div className="container">
-                <img alt="Front View" src="http://192.168.0.1:8080/stream/video.mjpeg" width="1102" height="830"/>
+                <img alt="Front View" src="http://192.168.0.1:8080/stream/video.mjpeg" width="1296" height="976"/>
                 <div className="overlay">
                     <LineChart label={depthLabel} data={depth}/>
                     <LineChart label={temperatureLabel} data={temperature}/>
                     <Compass direction={direction}/>
+                    <Viewer3D />
                 </div>
             </div>
         );

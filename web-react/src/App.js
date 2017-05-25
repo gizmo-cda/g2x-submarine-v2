@@ -85,7 +85,7 @@ class App extends Component {
         var depth = this.state.depth;
         var temperature = this.state.temperature;
         var voltage = this.state.voltage;
-        var direction = `rotate(${-this.state.compass})`;
+        var direction = this.state.compass;
         var thrusters = this.state.thrusters;
 
         var depthLabel = depth.length > 0

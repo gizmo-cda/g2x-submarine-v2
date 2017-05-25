@@ -8,7 +8,7 @@ class Compass extends React.Component {
     };
 
     render() {
-        let padding     = 20,
+        let padding     = 25,
             width       = this.props.width,
             height      = this.props.height,
             half_width  = width * 0.5,

@@ -56,7 +56,7 @@ class Clock extends React.Component {
 	}
 
 	render() {
-		let padding     = 20,
+		let padding     = 25,
 			width       = this.props.width,
 			height      = this.props.height,
 			half_width  = width * 0.5,
@@ -84,8 +84,8 @@ class Clock extends React.Component {
 
 		return (
 			<svg className="clock" width={width} height={height}>
-				<Label x={half_width} y={8} alignment="middle">{dayName}</Label>
-				<Label x={half_width} y={height + 2} alignment="middle">{dateString}</Label>
+				<Label x={half_width} y={10} alignment="middle">{dayName}</Label>
+				<Label x={half_width} y={height} alignment="middle">{dateString}</Label>
 				<g transform={origin}>
                     <circle r={radius} stroke={color} strokeWidth={1} fill="none"/>
                     <line x1={radius - 9} x2={radius} stroke={color} transform="rotate(0)"/>

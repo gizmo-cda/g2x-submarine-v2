@@ -1,4 +1,29 @@
 import React from 'react';
+import Label from './Label';
+
+let monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
+let dayNames = [
+	"Sunday",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday"
+];
 
 class Clock extends React.Component {
 	static defaultProps = {
@@ -41,6 +66,11 @@ class Clock extends React.Component {
 			color       = this.props.color;
 
 		let date = this.state.date;
+
+		let dayName = dayNames[date.getDay()];
+		let monthName = monthNames[date.getMonth()];
+		let dateString = `${monthName} ${date.getDate()}, ${date.getFullYear()}`;
+
 		let hour = date.getHours() % 12;
 		let minutes = date.getMinutes();
 		let seconds = date.getSeconds();
@@ -54,6 +84,8 @@ class Clock extends React.Component {
 
 		return (
 			<svg className="clock" width={width} height={height}>
+				<Label x={half_width} y={8} alignment="middle">{dayName}</Label>
+				<Label x={half_width} y={height + 2} alignment="middle">{dateString}</Label>
 				<g transform={origin}>
                     <circle r={radius} stroke={color} strokeWidth={1} fill="none"/>
                     <line x1={radius - 9} x2={radius} stroke={color} transform="rotate(0)"/>

@@ -69,7 +69,7 @@ class App extends Component {
 
         return (
             <div className="container">
-                <img alt="Front View" src="http://192.168.0.1:8080/stream/video.mjpeg" width="1296" height="976"/>
+                <img alt="" src="http://192.168.0.1:8080/stream/video.mjpeg" width="1296" height="976"/>
                 <div className="overlay">
                     <Clock/>
                     <LineChart label={depthLabel} data={depth}/>

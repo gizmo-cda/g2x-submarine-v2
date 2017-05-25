@@ -26,12 +26,24 @@ function generateData(frequency, trigFunction) {
     return data;
 }
 
+function squareWave(angle) {
+    let count = 10;
+    var sum = 0.0;
+
+    for (var i = 0; i < count; i++) {
+        sum += Math.sin(angle * (i * 2 + 1));
+    }
+
+    return sum / (count - 1);
+}
+
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
             depth: [],
             temperature: [],
+            voltage: [],
             compass: []
         };
     }
@@ -52,6 +64,7 @@ class App extends Component {
         this.setState({
             depth: generateData(0.025, Math.sin),
             temperature: generateData(0.05, Math.cos),
+            voltage: generateData(0.025, squareWave),
             compass: (10 * Date.now() / 1000) % 360.0
         });
     }
@@ -59,6 +72,7 @@ class App extends Component {
     render() {
         var depth = this.state.depth;
         var temperature = this.state.temperature;
+        var voltage = this.state.voltage;
         var direction = `rotate(${-this.state.compass})`;
         var depthLabel = depth.length > 0
             ? depth[depth.length - 1][1] + " ft"
@@ -66,6 +80,9 @@ class App extends Component {
         var temperatureLabel = temperature.length > 0
             ? temperature[temperature.length - 1][1] + " °F"
             : "-- °F";
+        var voltageLabel = voltage.length > 0
+            ? voltage[voltage.length - 1][1] + " V"
+            : " -- V";
 
         return (
             <div className="container">
@@ -77,6 +94,7 @@ class App extends Component {
                     <Compass direction={direction}/>
                     <Viewer3D />
                     <Thrusters />
+                    <LineChart label={voltageLabel} data={voltage}/>
                 </div>
             </div>
         );

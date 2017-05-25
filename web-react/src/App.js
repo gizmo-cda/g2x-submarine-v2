@@ -27,14 +27,16 @@ function generateData(frequency, trigFunction) {
 }
 
 function squareWave(angle) {
-    let count = 10;
+    let count = 5;
     var sum = 0.0;
 
     for (var i = 0; i < count; i++) {
-        sum += Math.sin(angle * (i * 2 + 1));
+        let overtone = i * 2 + 1;
+
+        sum += Math.sin(angle * overtone) / overtone;
     }
 
-    return sum / count;
+    return sum;
 }
 
 class App extends Component {

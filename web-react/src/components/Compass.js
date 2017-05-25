@@ -4,7 +4,8 @@ class Compass extends React.Component {
     static defaultProps = {
         width: 100,
         height: 100,
-        color: "rgb(255, 128, 0)"
+        color: "rgb(255, 128, 0)",
+        pointer_color: "rgb(255, 255, 255)"
     };
 
     render() {
@@ -24,7 +25,7 @@ class Compass extends React.Component {
                     <circle r={radius} stroke={color} strokeWidth={1} fill="none"/>
                     <g transform={this.props.direction}>
                         <g transform={offset}>
-                            <polygon points="6,0 0,4 0,-4" fill={color}/>
+                            <polygon points="6,0 0,4 0,-4" fill={this.props.pointer_color} fillOpacity="0.5"/>
                         </g>
                     </g>
                 </g>

@@ -34,7 +34,7 @@ function squareWave(angle) {
         sum += Math.sin(angle * (i * 2 + 1));
     }
 
-    return sum / (count - 1);
+    return sum / count;
 }
 
 class App extends Component {

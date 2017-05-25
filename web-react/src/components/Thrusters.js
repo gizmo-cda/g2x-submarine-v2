@@ -10,7 +10,6 @@ class Thrusters extends React.Component {
 	render() {
 		let width  = this.props.width,
 			height = this.props.height,
-			color  = this.props.color,
 			radius = 8;
 
 		return (

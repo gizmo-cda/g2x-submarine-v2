@@ -39,6 +39,7 @@ class App extends Component {
             () => this.tick(),
             1000
         );
+        this.tick();
     }
 
     componentWillUnount() {

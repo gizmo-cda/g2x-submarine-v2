@@ -9,8 +9,8 @@ class LineChart extends React.Component {
         height:     100,
         padding:    10,
         data:       [],
-        path_color: "rgb(255,128,0)",
-        point_color: "rgb(255, 255, 255)",
+        path_color: "rgb(255, 128, 0)",
+        point_color: "rgb(200, 200, 200)",
         label:      ""
     };
 
@@ -31,7 +31,7 @@ class LineChart extends React.Component {
             <svg className="lineChart" x={x} y={y} width={width} height={height}>
                 <defs>
                     <marker id="point" markerWidth={4} markerHeight={4} refX={2} refY={2}>
-                        <circle cx={2} cy={2} r={2} fill={this.props.point_color} fillOpacity="0.5"/>
+                        <circle cx={2} cy={2} r={2} fill={this.props.point_color}/>
                     </marker>
                 </defs>
                 <path d={path_string} stroke={color} fill="none" markerEnd="url(#point)"/>

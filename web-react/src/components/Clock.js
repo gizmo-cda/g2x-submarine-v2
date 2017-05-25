@@ -29,7 +29,8 @@ class Clock extends React.Component {
 	static defaultProps = {
 		width: 100,
 		height: 100,
-		color: "rgb(255, 128, 0)"
+		color: "rgb(255, 128, 0)",
+		hand_color: "rgb(200, 200, 200)",
 	};
 
 	constructor(props) {
@@ -63,7 +64,8 @@ class Clock extends React.Component {
 			half_height = height * 0.5,
 			origin      = `translate(${half_width}, ${half_height})`,
 			radius      = (Math.min(width, height) - padding) * 0.5 - 1,
-			color       = this.props.color;
+			color       = this.props.color,
+			hand_color  = this.props.hand_color;
 
 		let date = this.state.date;
 
@@ -101,13 +103,13 @@ class Clock extends React.Component {
                     <line x1={radius - 5} x2={radius} stroke={color} transform="rotate(300)"/>
                     <line x1={radius - 5} x2={radius} stroke={color} transform="rotate(330)"/>
                     <g transform={hourAngleString}>
-                    	<line x2={radius * 0.65} stroke={color}/>
+                    	<line x2={radius * 0.65} stroke={hand_color}/>
                     </g>
                     <g transform={minuteAngleString}>
-                    	<line x2={radius - 3} stroke={color}/>
+                    	<line x2={radius - 3} stroke={hand_color}/>
                     </g>
                     <g transform={secondAngleString}>
-                    	<line x2={radius - 3} stroke="red" strokeOpacity={0.5}/>
+                    	<line x2={radius - 3} stroke="red" />
                     </g>
                 </g>
 			</svg>

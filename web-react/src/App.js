@@ -46,7 +46,8 @@ class App extends Component {
             depth: [],
             temperature: [],
             voltage: [],
-            compass: []
+            compass: [],
+            thrusters: [[], [], [], [], []]
         };
     }
 
@@ -63,11 +64,20 @@ class App extends Component {
     }
 
     tick() {
+        let date = Date.now();
+
         this.setState({
             depth: generateData(0.025, Math.sin),
             temperature: generateData(0.05, Math.cos),
             voltage: generateData(0.025, squareWave),
-            compass: (10 * Date.now() / 1000) % 360.0
+            compass: (10 * date / 1000) % 360.0,
+            thrusters: [
+                Math.sin(0.025 * 2.0 * Math.PI * date / 1000).toFixed(3),
+                Math.cos(0.05 * 2.0 * Math.PI * date / 1000).toFixed(3),
+                squareWave(0.025 * 2.0 * Math.PI * date / 1000).toFixed(3),
+                Math.cos(0.05 * 2.0 * Math.PI * date / 1000).toFixed(3),
+                Math.sin(0.025 * 2.0 * Math.PI * date / 1000).toFixed(3)
+            ]
         });
     }
 
@@ -76,6 +86,8 @@ class App extends Component {
         var temperature = this.state.temperature;
         var voltage = this.state.voltage;
         var direction = `rotate(${-this.state.compass})`;
+        var thrusters = this.state.thrusters;
+
         var depthLabel = depth.length > 0
             ? depth[depth.length - 1][1] + " ft"
             : "-- ft";
@@ -93,10 +105,10 @@ class App extends Component {
                     <Clock/>
                     <LineChart label={depthLabel} data={depth}/>
                     <LineChart label={temperatureLabel} data={temperature}/>
+                    <LineChart label={voltageLabel} data={voltage}/>
                     <Compass direction={direction}/>
                     <Viewer3D />
-                    <Thrusters />
-                    <LineChart label={voltageLabel} data={voltage}/>
+                    <Thrusters data={thrusters}/>
                 </div>
             </div>
         );

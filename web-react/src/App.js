@@ -4,6 +4,7 @@ import Clock from './components/Clock';
 import LineChart from './components/LineChart';
 import Compass from './components/Compass';
 import Viewer3D from './components/Viewer3D';
+import Thrusters from './components/Thrusters';
 
 function generateData(frequency, trigFunction) {
     var t = Date.now();
@@ -75,6 +76,7 @@ class App extends Component {
                     <LineChart label={temperatureLabel} data={temperature}/>
                     <Compass direction={direction}/>
                     <Viewer3D />
+                    <Thrusters />
                 </div>
             </div>
         );

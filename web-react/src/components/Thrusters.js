@@ -15,11 +15,11 @@ class Thrusters extends React.Component {
 
 		return (
 			<svg className="thrusters" width={width} height={height}>
-				<Thruster cx={15} cy={30} power={thrusters[0]}/>
-				<Thruster cx={35} cy={30} power={thrusters[1]}/>
+				<Thruster cx={14} cy={35} power={thrusters[0]}/>
+				<Thruster cx={37} cy={28} power={thrusters[1]}/>
 				<Thruster cx={50} cy={70} power={thrusters[2]}/>
-				<Thruster cx={65} cy={30} power={thrusters[3]}/>
-				<Thruster cx={85} cy={30} power={thrusters[4]}/>
+				<Thruster cx={63} cy={28} power={thrusters[3]}/>
+				<Thruster cx={87} cy={35} power={thrusters[4]}/>
 			</svg>
 		)
 	}

@@ -100,12 +100,16 @@ class App extends Component {
 
         return (
             <div className="container">
-                <img alt="" src="http://192.168.0.1:8080/stream/video.mjpeg" width="1296" height="976"/>
-                <div className="overlay">
+                <div className="left">
                     <Clock/>
                     <LineChart label={depthLabel} data={depth}/>
                     <LineChart label={temperatureLabel} data={temperature}/>
                     <LineChart label={voltageLabel} data={voltage}/>
+                </div>
+                <div className="video">
+                    <img alt="" src="http://192.168.0.1:8080/stream/video.mjpeg" width="1296" height="976"/>
+                </div>
+                <div className="right">
                     <Compass direction={direction}/>
                     <Viewer3D />
                     <Thrusters data={thrusters}/>

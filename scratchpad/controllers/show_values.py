@@ -69,5 +69,5 @@ while done is False:
 
         # if we got a new value, then send it to the server
         if value is not None:
-            print("controller={}, type={}, index={}, value={}".format(controller, type, index, value))
-
+            if value == -1 or value == 1:
+                print("controller={}, type={}, index={}, value={}".format(controller, type, index, value))

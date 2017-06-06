@@ -6,7 +6,7 @@
 - Add the following to the end of the file;
 ```
 interface eth0
-static address 192.168.0.1
+static ip_address=192.168.0.1/24
 ```
 - reboot
 	- `sudo reboot`

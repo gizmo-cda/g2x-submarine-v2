@@ -1,17 +1,21 @@
-# Control Module
+# Navigation Module
 
-## Setup Node
+## Setup Static IP Address
 
-- Remove all node-related packages
-	- `sudo apt-get remove nodejs nodejs-legacy nodered`
-	- NOTE: you can check what packages are installed that have the text `node` in them using `dpkg --list *node*`
-- Install n
-	- `curl -L https://git.io/n-install | bash`
-- Set environment variables for `n`
-	- `. /home/pi/.bashrc`
-	- NOTE: you only need to run this right after installation
-- Activate node v6.10.2
-	- `n 6.10.2`
+- Edit `/etc/network/interfaces`
+- Set the `eth0` entry to the following;
+```
+auto eth0
+iface eth0 inet static
+	address 192.168.0.1
+	netmask 255.255.255.0
+```
+- disable dhcp
+	- `sudo systemctl disable dhcpcd`
+- enable classic networking
+	- `sudo systemctl enable networking`
+- reboot
+	- `sudo reboot`
 
 ## Setup uv4l
 

@@ -11,3 +11,4 @@ node_modules/
 
 scratchpad/video-tests/video/
 
+__pycache__

@@ -2,24 +2,20 @@
 
 ## Setup Static IP Address
 
-- Edit `/etc/network/interfaces`
-- Set the `eth0` entry to the following;
+- Edit `/etc/dhcpcd.conf`
+- Add the following to the end of the file;
 ```
-auto eth0
-iface eth0 inet static
-	address 192.168.0.1
-	netmask 255.255.255.0
+interface eth0
+static address 192.168.0.1
 ```
-- disable dhcp
-	- `sudo systemctl disable dhcpcd`
-- enable classic networking
-	- `sudo systemctl enable networking`
 - reboot
 	- `sudo reboot`
+- check ip address. It should match the static address in the .conf file
+	- `ifconfig eth0`
 
 ## Setup uv4l
 
-- `curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add`
+- `curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -`
 - Add `deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/ jessie main` to `/etc/apt/sources.list`
 - `sudo apt-get update`
 - `sudo apt-get install uv4l uv4l-raspicam uv4l-server uv4l-raspicam-extras`

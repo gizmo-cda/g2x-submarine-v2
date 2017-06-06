@@ -4,6 +4,7 @@ import socket
 import atexit
 import pygame
 from message import Message
+import platform
 
 
 # Each game controller axis returns a value in the closed interval [-1, 1]. We
@@ -26,6 +27,14 @@ from message import Message
 # work the first time. If we find that we need more fine control of the
 # thrusters, we may need to increase this value.
 PRECISION = 3
+
+# NOTE: For some reason the same controller does not return the same axes
+# numbers on macOS and Raspian, so we adjust these constants per OS so that the
+# server will get consistent axis numbers
+if platform.system() == "Darwin":
+    AXIS_MAP = [0, 1, 2, 3, 4, 5]
+else:
+    AXIS_MAP = [0, 1, 2, 4, 5, 3]
 
 # This is the IP address and port of the server we will connect to. We send
 # controller values to that machine over the network.
@@ -129,7 +138,7 @@ while done is False:
         elif event.type == pygame.JOYAXISMOTION:
             # We have a joystick event. Grab which axis this is and the axis'
             # current value
-            index = event.axis
+            index = AXIS_MAP[event.axis]
             value = round(event.value, PRECISION)
 
         # if we got a new value, then send it to the server

@@ -26,6 +26,19 @@ import platform
 # thrusters, we may need to increase this value.
 PRECISION = 3
 
+# Set the sensitivity to be applied to each thruster. 0 indicates a linear
+# response which is the default when no sensitivity is applied. 1 indicates full
+# sensitivity. Values between 0 and 1 can be used to increase and to decrease
+# the overall sensitivity. Increasing sensivity dampens lower values and
+# amplifies larger values giving more precision at lower power levels.
+SENSITIVITY = 0.75
+
+# We use a cubic to apply sensitivity. If you find that full sensitivity
+# (dampening) does not give you fine enough control, you can increase the degree
+# of the polynomial used for dampening. Note that this must be a positive odd
+# number. Any other values will cause unexpected results.
+SENSITIVITY_POWER = 3
+
 # Define a series of comstants, one for each thruster
 HL = 0  # horizontal left
 VL = 1  # vertical left
@@ -264,10 +277,14 @@ class ThrusterController:
 
     def set_motor(self, motor_number, value):
         motor = self.motor_controller.devices[motor_number]
+        value = self.apply_sensitivity(value)
         pwm_value = int(map_range(value, -1.0, 1.0, FULL_REVERSE, FULL_FORWARD))
 
         # print("setting motor {0} to {1}".format(motor_number, pwm_value))
         motor.off = pwm_value
+
+    def apply_sensitivity(self, value):
+        return SENSITIVITY * value**SENSITIVITY_POWER + (1.0 - SENSITIVITY) * value
 
 
 if __name__ == "__main__":

@@ -31,6 +31,7 @@ static ip_address=192.168.0.1/24
 
 ## Miscellaneous
 
+- `sudo pip3 install adafruit-pca9685`
 - `sudo apt-get install vim`
 - `sudo apt-get install netatalk`
 - `sudo pip3 pymongo`

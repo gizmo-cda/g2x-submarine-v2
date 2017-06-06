@@ -47,22 +47,12 @@ VR = 3  # vertical right
 HR = 4  # horizontal right
 
 # Define a series of constants, one for each game controller axis
-# NOTE: For some reason the same controller does not return the same
-# axes numbers on macOS and Raspian, so we adjust these constants per OS
-if platform == "Darwin":
-    JL_H = 0  # left joystick horizontal axis
-    JL_V = 1  # left joystick vertical axis
-    JR_H = 2  # right joystick horizontal axis
-    JR_V = 3  # right joystick vertical axis
-    AL = 4    # left analog button
-    AR = 5    # right analog button
-else:
-    JL_H = 0  # left joystick horizontal axis
-    JL_V = 1  # left joystick vertical axis
-    JR_H = 2  # right joystick horizontal axis
-    JR_V = 5  # right joystick vertical axis
-    AL = 3    # left analog button
-    AR = 4    # right analog button
+JL_H = 0  # left joystick horizontal axis
+JL_V = 1  # left joystick vertical axis
+JR_H = 2  # right joystick horizontal axis
+JR_V = 3  # right joystick vertical axis
+AL = 4    # left analog button
+AR = 5    # right analog button
 
 # Define constants for the PWM to run a thruster in full reverse, full forward,
 # or neutral
@@ -105,40 +95,40 @@ class ThrusterController:
         # angle. Since we have only given the interpolator values for very
         # specific angles, it will have to determine values for angles we have
         # not provided. It does this using linear interpolation.
-        self.left_thruster = Interpolator()
-        self.left_thruster.addIndexValue(0.0, -1.0)
-        self.left_thruster.addIndexValue(90.0, 1.0)
-        self.left_thruster.addIndexValue(180.0, 1.0)
-        self.left_thruster.addIndexValue(270.0, -1.0)
-        self.left_thruster.addIndexValue(360.0, -1.0)
+        self.horizontal_left = Interpolator()
+        self.horizontal_left.addIndexValue(0.0, -1.0)
+        self.horizontal_left.addIndexValue(90.0, 1.0)
+        self.horizontal_left.addIndexValue(180.0, 1.0)
+        self.horizontal_left.addIndexValue(270.0, -1.0)
+        self.horizontal_left.addIndexValue(360.0, -1.0)
 
-        self.right_thruster = Interpolator()
-        self.right_thruster.addIndexValue(0.0, 1.0)
-        self.right_thruster.addIndexValue(90.0, 1.0)
-        self.right_thruster.addIndexValue(180.0, -1.0)
-        self.right_thruster.addIndexValue(270.0, -1.0)
-        self.right_thruster.addIndexValue(360.0, 1.0)
+        self.vertical_left = Interpolator()
+        self.vertical_left.addIndexValue(0.0, 1.0)
+        self.vertical_left.addIndexValue(90.0, -1.0)
+        self.vertical_left.addIndexValue(180.0, -1.0)
+        self.vertical_left.addIndexValue(270.0, 1.0)
+        self.vertical_left.addIndexValue(360.0, 1.0)
 
-        self.v_front_thruster = Interpolator()
-        self.v_front_thruster.addIndexValue(0.0, 0.0)
-        self.v_front_thruster.addIndexValue(90.0, -1.0)
-        self.v_front_thruster.addIndexValue(180.0, 0.0)
-        self.v_front_thruster.addIndexValue(270.0, 1.0)
-        self.v_front_thruster.addIndexValue(360.0, 0.0)
+        self.vertical_center = Interpolator()
+        self.vertical_center.addIndexValue(0.0, 0.0)
+        self.vertical_center.addIndexValue(90.0, 1.0)
+        self.vertical_center.addIndexValue(180.0, 0.0)
+        self.vertical_center.addIndexValue(270.0, -1.0)
+        self.vertical_center.addIndexValue(360.0, 0.0)
 
-        self.v_back_left_thruster = Interpolator()
-        self.v_back_left_thruster.addIndexValue(0.0, 1.0)
-        self.v_back_left_thruster.addIndexValue(90.0, 1.0)
-        self.v_back_left_thruster.addIndexValue(180.0, -1.0)
-        self.v_back_left_thruster.addIndexValue(270.0, -1.0)
-        self.v_back_left_thruster.addIndexValue(360.0, 1.0)
+        self.vertical_right = Interpolator()
+        self.vertical_right.addIndexValue(0.0, -1.0)
+        self.vertical_right.addIndexValue(90.0, -1.0)
+        self.vertical_right.addIndexValue(180.0, 1.0)
+        self.vertical_right.addIndexValue(270.0, 1.0)
+        self.vertical_right.addIndexValue(360.0, -1.0)
 
-        self.v_back_right_thruster = Interpolator()
-        self.v_back_right_thruster.addIndexValue(0.0, -1.0)
-        self.v_back_right_thruster.addIndexValue(90.0, 1.0)
-        self.v_back_right_thruster.addIndexValue(180.0, 1.0)
-        self.v_back_right_thruster.addIndexValue(270.0, -1.0)
-        self.v_back_right_thruster.addIndexValue(360.0, -1.0)
+        self.horizontal_right = Interpolator()
+        self.horizontal_right.addIndexValue(0.0, 1.0)
+        self.horizontal_right.addIndexValue(90.0, 1.0)
+        self.horizontal_right.addIndexValue(180.0, -1.0)
+        self.horizontal_right.addIndexValue(270.0, -1.0)
+        self.horizontal_right.addIndexValue(360.0, 1.0)
 
         # setup ascent/descent controllers
         self.ascent = -1.0
@@ -242,8 +232,8 @@ class ThrusterController:
         # updating horizontal thrusters is easy: find current angle, convert
         # angle to thruster values, apply values
         if update_horizontal_thrusters:
-            left_value = self.left_thruster.valueAtIndex(self.j1.angle)
-            right_value = self.right_thruster.valueAtIndex(self.j1.angle)
+            left_value = self.horizontal_left.valueAtIndex(self.j1.angle)
+            right_value = self.horizontal_right.valueAtIndex(self.j1.angle)
             power = min(1.0, self.j1.length)
             self.set_motor(HL, left_value * power)
             self.set_motor(HR, right_value * power)
@@ -254,21 +244,21 @@ class ThrusterController:
         # [-1,1] interval.
         if update_vertical_thrusters:
             power = min(1.0, self.j2.length)
-            back_value = self.v_front_thruster.valueAtIndex(self.j2.angle) * power
-            front_left_value = self.v_back_left_thruster.valueAtIndex(self.j2.angle) * power
-            front_right_value = self.v_back_right_thruster.valueAtIndex(self.j2.angle) * power
+            back_value = self.vertical_center.valueAtIndex(self.j2.angle) * power
+            front_left_value = self.vertical_left.valueAtIndex(self.j2.angle) * power
+            front_right_value = self.vertical_right.valueAtIndex(self.j2.angle) * power
             if self.ascent != -1.0:
                 percent = (1.0 + self.ascent) / 2.0
                 max_thrust = max(back_value, front_left_value, front_right_value)
                 max_adjust = (1.0 - max_thrust) * percent
-                back_value += max_adjust
+                # back_value += max_adjust
                 front_left_value += max_adjust
                 front_right_value += max_adjust
             elif self.descent != -1.0:
                 percent = (1.0 + self.descent) / 2.0
                 min_thrust = min(back_value, front_left_value, front_right_value)
                 max_adjust = (min_thrust - -1.0) * percent
-                back_value -= max_adjust
+                # back_value -= max_adjust
                 front_left_value -= max_adjust
                 front_right_value -= max_adjust
             self.set_motor(VC, back_value)

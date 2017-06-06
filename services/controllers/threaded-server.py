@@ -35,9 +35,9 @@ def on_new_client(clientsocket, addr):
             break
         else:
             m = Message(msg)
-            if m.type == 0:
+            if m.input_type == 0:
                 controller.update_axis(m.input_index, m.input_value)
-            elif m.type == 1:
+            elif m.input_type == 1:
                 controller.update_button(m.input_index, m.input_value)
 
         # this is a simple confirmation to the client that we have received its

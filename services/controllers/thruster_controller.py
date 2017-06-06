@@ -265,6 +265,10 @@ class ThrusterController:
             self.set_motor(VL, front_left_value)
             self.set_motor(VR, front_right_value)
 
+    def update_button(self, button, value):
+        print("button {} = {}", button, value)
+        pass
+
     def set_motor(self, motor_number, value):
         motor = self.motor_controller.devices[motor_number]
         value = self.apply_sensitivity(value)

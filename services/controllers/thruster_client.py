@@ -30,10 +30,11 @@ PRECISION = 3
 
 # NOTE: For some reason the same controller does not return the same axes
 # numbers on macOS and Raspian, so we adjust these constants per OS so that the
-# server will get consistent axis numbers
-if platform.system() == "Darwin":
-    AXIS_MAP = [0, 1, 2, 3, 4, 5]
-else:
+# server will get consistent axis numbers. This has only been tested on macOS
+# and Raspian
+AXIS_MAP = None
+
+if platform.system() != "Darwin":
     AXIS_MAP = [0, 1, 2, 4, 5, 3]
 
 # This is the IP address and port of the server we will connect to. We send
@@ -138,8 +139,20 @@ while done is False:
         elif event.type == pygame.JOYAXISMOTION:
             # We have a joystick event. Grab which axis this is and the axis'
             # current value
-            index = AXIS_MAP[event.axis]
+            type = 0
+            if AXIS_MAP is not None and 0 <= event.axis and event.axis < len(AXIS_MAP):
+                index = AXIS_MAP[event.axis]
+            else:
+                index = event.axis
             value = round(event.value, PRECISION)
+        elif event.type == pygame.JOYBUTTONDOWN:
+            type = 1
+            index = event.button
+            value = 1
+        elif event.type == pygame.JOYBUTTONUP:
+            type = 1
+            index = event.button
+            value = 0
 
         # if we got a new value, then send it to the server
         if value is not None:

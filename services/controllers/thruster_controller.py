@@ -2,6 +2,7 @@ from vector2d import Vector2D
 from interpolator import Interpolator
 from pwm_controller import PWMController
 from utils import map_range
+import platform
 
 
 # Each game controller axis returns a value in the closed interval [-1, 1]. We
@@ -31,6 +32,24 @@ VL = 1  # vertical left
 VC = 2  # vertical center
 VR = 3  # vertical right
 HR = 4  # horizontal right
+
+# Define a series of constants, one for each game controller axis
+# NOTE: For some reason the same controller does not return the same
+# axes numbers on macOS and Raspian, so we adjust these constants per OS
+if platform == "Darwin":
+    JL_H = 0  # left joystick horizontal axis
+    JL_V = 1  # left joystick vertical axis
+    JR_H = 2  # right joystick horizontal axis
+    JR_V = 3  # right joystick vertical axis
+    AL = 4    # left analog button
+    AR = 5    # right analog button
+else:
+    JL_H = 0  # left joystick horizontal axis
+    JL_V = 1  # left joystick vertical axis
+    JR_H = 2  # right joystick horizontal axis
+    JR_V = 5  # right joystick vertical axis
+    AL = 3    # left analog button
+    AR = 4    # right analog button
 
 # Define constants for the PWM to run a thruster in full reverse, full forward,
 # or neutral
@@ -179,27 +198,27 @@ class ThrusterController:
         # precision. This means we will get an update from the controller, but
         # we decided to ignore it since it won't result in a significant change
         # to our thrusters.
-        if axis == 0:
+        if axis == JL_H:
             if self.j1.x != value:
                 self.j1.x = value
                 update_horizontal_thrusters = True
-        elif axis == 1:
+        elif axis == JL_V:
             if self.j1.y != value:
                 self.j1.y = value
                 update_horizontal_thrusters = True
-        elif axis == 2:
+        elif axis == JR_H:
             if self.j2.x != value:
                 self.j2.x = value
                 update_vertical_thrusters = True
-        elif axis == 5:
+        elif axis == JR_V:
             if self.j2.y != value:
                 self.j2.y = value
                 update_vertical_thrusters = True
-        elif axis == 3:
+        elif axis == AL:
             if self.descent != value:
                 self.descent = value
                 update_vertical_thrusters = True
-        elif axis == 4:
+        elif axis == AR:
             if self.ascent != value:
                 self.ascent = value
                 update_vertical_thrusters = True

@@ -2,7 +2,6 @@ from vector2d import Vector2D
 from interpolator import Interpolator
 from pwm_controller import PWMController
 from utils import map_range
-import platform
 
 
 # Each game controller axis returns a value in the closed interval [-1, 1]. We
@@ -31,13 +30,13 @@ PRECISION = 3
 # sensitivity. Values between 0 and 1 can be used to increase and to decrease
 # the overall sensitivity. Increasing sensivity dampens lower values and
 # amplifies larger values giving more precision at lower power levels.
-SENSITIVITY = 0.75
+SENSITIVITY = 0.7
 
 # We use a cubic to apply sensitivity. If you find that full sensitivity
 # (dampening) does not give you fine enough control, you can increase the degree
 # of the polynomial used for dampening. Note that this must be a positive odd
 # number. Any other values will cause unexpected results.
-SENSITIVITY_POWER = 3
+SENSITIVITY_POWER = 3.0
 
 # Define a series of comstants, one for each thruster
 HL = 0  # horizontal left
@@ -266,8 +265,37 @@ class ThrusterController:
             self.set_motor(VR, front_right_value)
 
     def update_button(self, button, value):
-        print("button {} = {}", button, value)
-        pass
+        global SENSITIVITY
+        global SENSITIVITY_POWER
+        show_sensitivity = False
+
+        # only process button up events
+        if value == 0:
+            if button == 0:
+                new_power = max(1.0, SENSITIVITY_POWER - 2.0)
+                if new_power != SENSITIVITY_POWER:
+                    SENSITIVITY_POWER = new_power
+                    show_sensitivity = True
+            elif button == 1:
+                new_sensitivity = max(0.0, SENSITIVITY - 0.1)
+                if new_sensitivity != SENSITIVITY:
+                    SENSITIVITY = new_sensitivity
+                    show_sensitivity = True
+            elif button == 2:
+                new_power = min(SENSITIVITY_POWER + 2.0, 9.0)
+                if new_power != SENSITIVITY_POWER:
+                    SENSITIVITY_POWER = new_power
+                    show_sensitivity = True
+            elif button == 3:
+                new_sensitivity = min(SENSITIVITY + 0.1, 1.0)
+                if new_sensitivity != SENSITIVITY:
+                    SENSITIVITY = new_sensitivity
+                    show_sensitivity = True
+            else:
+                print("button {} = {}".format(button, value))
+
+            if show_sensitivity:
+                print("Sensitiviy = {}, Exponent = {}".format(SENSITIVITY, SENSITIVITY_POWER))
 
     def set_motor(self, motor_number, value):
         motor = self.motor_controller.devices[motor_number]

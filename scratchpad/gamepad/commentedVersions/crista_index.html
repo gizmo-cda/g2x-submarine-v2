@@ -39,8 +39,8 @@ SECOND HELPFUL URL: https://developer.mozilla.org/en-US/docs/Web/API/Gamepad
 					});
 					//axes: An array representing the controls with axes present on the device (e.g. analog thumb sticks)
 					controller.axes.forEach((axis, index) => { //For every axis...
-						let name = "axis " + index; /Each axis is given a name like 'axis8' etc
-						result[name] = axis.toFixed(3); //Add the axis to the result dict which will look like 'axis8': val (in which max val is fixed to 3, evidently)
+						let name = "axis " + index; //Each axis is given a name like 'axis8' etc
+						result[name] = axis.toFixed(3); //Add the axis to the result dict which will look like 'axis8': val (the number's decimal place is rounded to 3 digits after the decimal)
 					});
 					pre.innerHTML = JSON.stringify(result, null, 2); //Send the printed result as a string within inner HTML
 				});

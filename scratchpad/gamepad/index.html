@@ -52,7 +52,9 @@
 			function scan() {
 				var gamepads = navigator.getGamepads();
 
-				gamepads.forEach(gamepad => {
+				for (var i = 0; i < gamepads.length; i++) {
+					var gamepad = gamepads[i];
+
 					if (gamepad) {
 						if (gamepad.index in controllers) {
 							controllers[gamepad.index] = gamepad;
@@ -61,7 +63,7 @@
 							add(gamepad);
 						}
 					}
-				});
+				}
 			}
 
 			function add(gamepad) {

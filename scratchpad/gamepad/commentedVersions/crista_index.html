@@ -1,0 +1,85 @@
+<!-- 
+HELPFUL URL: https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
+SECOND HELPFUL URL: https://developer.mozilla.org/en-US/docs/Web/API/Gamepad
+-->
+
+<html>
+	<head>
+		<title>Gamepad API</title>
+		<link rel="stylesheet" type="text/css" href="index.css">
+	</head>
+	<body onload="go()">
+		<h1>Gamepad API</h1>
+		<script type="text/javascript">
+			let controllers = {}; //controllers is a dict of controllers in which the key is the index of the controller and the value is the gamepad
+			function go() {
+				window.addEventListener("gamepadconnected", connect);
+				//If a controller is connected, run connect function
+				window.addEventListener("gamepaddisconnected", disconnect);
+				//Listens for disconnect of gamepad in order to run disconnect function
+			}
+			function connect(e) {
+				add(e.gamepad); //Run add function with parameter of new gamepad
+			}
+			function disconnect(e) {
+				remove(e.gamepad); //Remove controller when disconnect occurs/terminates communication
+			}
+			function update(e) { //Constantly updating to check for a change in values
+				scan(); //Runs scan function (See below)
+				Object.keys(controllers).forEach(index => { 
+				  //Arrow function which takes paremeters of each controller('s index) currently in the controller dict (in use) and watches them for value changes
+					let controller = controllers[index]; //controller is equal to the actual gamepad object
+					let id = "pre" + controller.index; //Making an id to differentiate between different gamepads based on their respective indices... will look like 'pre0' etc
+					let pre = document.getElementById(id); //Pre variable is equal to the element id, as previously defined
+					let result = {}; //Another dictionary for storing button:index information
+					//buttons: An array of GamepadButton objects representing the buttons present on the device. Each GamepadButton has a pressed and a value property
+					controller.buttons.forEach((button, index) => { //For every button on the controller...
+						let name = "button " + index; //the name variable is something like 'button5' etc
+						result[name] = button.value; //add a key/val pair to result which will look like button5: val of button
+					});
+					//axes: An array representing the controls with axes present on the device (e.g. analog thumb sticks)
+					controller.axes.forEach((axis, index) => { //For every axis...
+						let name = "axis " + index; //Each axis is given a name like 'axis8' etc
+						result[name] = axis.toFixed(3); //Add the axis to the result dict which will look like 'axis8': val (the number's decimal place is rounded to 3 digits after the decimal)
+					});
+					pre.innerHTML = JSON.stringify(result, null, 2); //Send the printed result as a string within inner HTML
+				});
+				requestAnimationFrame(update); //update data at the very end of update
+				//According to https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame...requestAnimationFrame() is a method tells the browser that you wish to perform an animation [updating the controller data to communicate on user side] and requests that the browser call a specified function [update()] to update an animation before the next repaint [metaphorically, really just a data refresh]. The method takes as an argument a callback to be invoked before the repaint [update].
+			}
+			function scan() {
+				var gamepads = navigator.getGamepads(); //Gamepads 
+				gamepads.forEach(gamepad => { //for each gamepad...
+					if (gamepad) { // If a gamepad appears...
+						if (gamepad.index in controllers) { //And it is in the controllers dict...
+							controllers[gamepad.index] = gamepad; //It gets replaced into the dictionary under the key of its current index (if it is unplugged and readded, the new index would be added, causing "player one" to become "player two")
+						}
+						else {
+							add(gamepad); //Otherwise, let's add that sucker
+						}
+					}
+				});
+			}
+			function add(gamepad) { //function that runs when you add a new controller
+				controllers[gamepad.index] = gamepad; //adding the new controller to a dictionary of controllers
+				var div = document.createElement("div"); //making div element
+				div.setAttribute("id", "controller" + gamepad.index); //the id attribute of div is 'controller7' for a controller with the index of 7 for example
+				var header = document.createElement("h1"); //just some css stuff
+				var headerText = document.createTextNode("gamepad " + gamepad.id); //the header text that shows which gamepad has been added
+				header.appendChild(headerText); //Add the controller add notification (essentially) to printed header
+				div.appendChild(header); //Add the header that indicates which controller has been connected
+				var pre = document.createElement("pre"); //Create new element "pre"
+				pre.setAttribute("id", "pre" + gamepad.index); //adding an id attribute to pre which looks like 'pre9' for a controller with index of 9
+				div.appendChild(pre); //Append all this information to div
+				document.body.appendChild(div); //Basically adding div (which is a collection of indentification info about the newly added controller) to the HTML body
+				requestAnimationFrame(update); //Print all this information when a new controller is added, run update
+			}
+			function remove(gamepad) {
+				console.log("removing %s", gamepad.id); //Prints to console that you are removing a controller, 
+				delete controllers[gamepad.index]; //delete gamepad from (in use) controllers list
+				var div = document.getElementById("controller" + gamepad.index); //Div is defined as the referenced controller that is getting removed
+				document.body.removeChild(div); //Remove div from html body
+			}
+		</script>
+	</body>
+</html>

@@ -9,102 +9,20 @@
   <script type="text/javascript" src="./lib/Interpolator.js"></script>
   <script type="text/javascript" src="./lib/Sensitivity.js"></script>
   <script type="text/javascript" src="./lib/InterpolatorWithSensitivity.js"></script>
-  <script type="text/javascript">
-    let svgns = "http://www.w3.org/2000/svg";
-
-    var interpolator, sensitivity, iWithS;
-    var iGraph, sGraph, iwsGraph;
-
-    function go() {
-      let interpolator = createInterpolator();
-      sensitivity = new Sensitivity();
-      iWithS = new InterpolatorWithSensitivity(interpolator, sensitivity);
-
-      let chart = document.getElementById("chart");
-
-      let margin = 15;
-      let padding = 15;
-      let width = 600;
-      let height = 200;
-
-      iGraph = new Graph(
-        margin,
-        margin + 0 * (200 + padding),
-        width,
-        height,
-        0, 360,
-        -1, 1,
-        4,
-        10,
-        360,
-        10,
-        interpolator
-      );
-
-      sGraph = new Graph(
-        margin,
-        margin + 1 * (200 + padding),
-        width,
-        height,
-        -1, 1,
-        -1, 1,
-        4,
-        10,
-        360,
-        10,
-        sensitivity
-      );
-
-      iwsGraph = new Graph(
-        margin,
-        margin + 2 * (200 + padding),
-        width,
-        height,
-        0, 360,
-        -1, 1,
-        4,
-        10,
-        360,
-        10,
-        iWithS
-      );
-
-      iGraph.attach(chart);
-      sGraph.attach(chart);
-      iwsGraph.attach(chart);
-    }
-
-    function createInterpolator() {
-      let interpolator = new Interpolator();
-
-      interpolator.addIndexValue(0.0, -1.0)
-      interpolator.addIndexValue(90.0, 1.0)
-      interpolator.addIndexValue(180.0, 1.0)
-      interpolator.addIndexValue(270.0, -1.0)
-      interpolator.addIndexValue(360.0, -1.0)
-
-      return interpolator;
-    }
-
-    function updateT(value) {
-      sensitivity.t = value;
-
-      sGraph.drawData();
-      iwsGraph.drawData();
-    }
-
-    function updatePower(value) {
-      sensitivity.power = value;
-
-      sGraph.drawData();
-      iwsGraph.drawData();
-    }
-  </script>
+  <script type="text/javascript" src="app.js"></script>
 </head>
 <body onload="go()">
-  <svg id="chart" xmlns="https://www.w3.org/2000/svg" width="100%" height="800">
+  <svg id="chart" xmlns="https://www.w3.org/2000/svg" width="630" height="645">
   </svg>
-  <input type="range" name="t" min="0" max="1" step="0.1" value="0.7" oninput="updateT(this.value)">
-  <input type="range" name="power" min="3" max="9" step="2" value="3" oninput="updatePower(this.value)">
+  <fieldset>
+    <label for="t">Sensitivity Strength:</label>
+    <input type="range" name="t" min="0" max="1" step="0.1" value="0.7" oninput="updateT(this.value)">
+    <em id="tLabel">0.7</em>
+  </fieldset>
+  <fieldset>
+    <label for="power">Sensitivity Power:</label>
+    <input type="range" name="power" min="3" max="9" step="2" value="3" oninput="updatePower(this.value)">
+    <em id="powerLabel">3</em>
+  </fieldset>
 </body>
 </html>

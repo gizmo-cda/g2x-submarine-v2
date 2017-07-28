@@ -24,7 +24,7 @@ class Graph {
         this.labelSize = 32;
 
         this.showJoysticks = true;
-        this.joystickSize = 30;
+        this.joystickSize = 22;
 
         this.rootNode = null;
         this.dataNode = null;
@@ -102,13 +102,14 @@ class Graph {
         let factorY = bbox.height / 100;
         let width = this.joystickSize * 2;
         let power = 100;
-        let margin = 3;
+        let margin = 2.5;
 
-        for (var step = 1; step < 4; step++) {
+        for (var step = 0; step <= this.xMajorSub; step++) {
             let radians = lerp(0, 2.0 * Math.PI, step / this.xMajorSub);
             let x = lerp(bbox.x, bbox.x + bbox.width, step / this.xMajorSub);
             let y = bbox.y + power * factorY;
 
+            // create left joystick
             let left = new Joystick(
                 x - this.joystickSize + margin,
                 y + margin,
@@ -119,6 +120,9 @@ class Graph {
             left.xPosition = Math.cos(-radians);
             left.yPosition = Math.sin(-radians);
 
+            left.attach(this.rootNode);
+
+            // create right joystick
             let right = new Joystick(
                 x + margin,
                 y + margin,
@@ -128,7 +132,6 @@ class Graph {
 
             right.showPosition = false;
 
-            left.attach(this.rootNode);
             right.attach(this.rootNode);
         }
     }

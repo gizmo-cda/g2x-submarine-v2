@@ -8,6 +8,7 @@ class Joystick {
         this.showPosition = true;
         this.xPosition = 0;
         this.yPosition = 0;
+        this.controlRadius = 3.5;
 
         this.positionNode = null;
     }
@@ -35,13 +36,12 @@ class Joystick {
         // draw position
         if (this.showPosition) {
             let position = document.createElementNS(svgns, "circle");
-            let controlRadius = 6;
-            let cx = halfWidth + this.xPosition * (radius - controlRadius);
-            let cy = halfWidth + this.yPosition * (radius - controlRadius);
+            let cx = halfWidth + this.xPosition * (radius - this.controlRadius);
+            let cy = halfWidth + this.yPosition * (radius - this.controlRadius);
 
             position.setAttributeNS(null, "cx", cx);
             position.setAttributeNS(null, "cy", cy);
-            position.setAttributeNS(null, "r", controlRadius);
+            position.setAttributeNS(null, "r", this.controlRadius);
 
             position.setAttributeNS(null, "class", "joystick-handle");
 

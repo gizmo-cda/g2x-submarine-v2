@@ -10,7 +10,7 @@ function go() {
 
   let chart = document.getElementById("chart");
 
-  let margin = 15;
+  let margin = 35;
   let padding = 15;
   let width = 600;
   let height = 200;

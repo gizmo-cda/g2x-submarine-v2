@@ -10,7 +10,7 @@ fieldset {
 }
 
 .x-major, .y-major {
-	stroke: rgb(200, 200, 200);
+	stroke: rgba(200, 200, 200, 0.5);
 }
 
 .data-line {
@@ -20,11 +20,11 @@ fieldset {
 }
 
 .joystick-border {
-	stroke: rgb(255, 128, 0);
+	stroke: rgba(255, 128, 0, 0.5);
 	fill: none;
 }
 
 .joystick-handle {
 	stroke: none;
-	fill: rgb(255, 128, 0);
+	fill: rgba(255, 128, 0, 0.75);
 }

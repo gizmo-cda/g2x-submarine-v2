@@ -1,7 +1,7 @@
 class Sensitivity {
-    constructor() {
-        this.t = 0.7;
-        this.power = 3;
+    constructor(strength=0.7, power=3) {
+        this.t = strength;
+        this.power = power;
     }
 
     valueAtIndex(index) {

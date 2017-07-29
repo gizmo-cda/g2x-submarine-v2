@@ -9,7 +9,8 @@ from thruster_controller import ThrusterController
 # It is possible for a host to have multiple IP addresses. Using 0.0.0.0
 # will listen on all network interfaces on this host
 HOST = "0.0.0.0"
-PORT = 9999
+CONTROLLER_PORT = 9999
+CALIBRATION_PORT = 9998
 
 # These will eventually be set from the command-line
 SIMULATE = True
@@ -47,7 +48,7 @@ def on_calibration_server(controller):
         controller.set_settings(request.json)
         return {'status': 'OK'}
 
-    run(host='localhost', port=8080)
+    run(host=HOST, port=CALIBRATION_PORT)
 
 
 def on_new_client(controller, clientsocket, addr):
@@ -103,13 +104,13 @@ atexit.register(close_socket)
 s = socket.socket()
 
 # listen for connections on the specified IP address and port
-s.bind((HOST, PORT))
+s.bind((HOST, CONTROLLER_PORT))
 
 # Begin listening for incoming connections allowing up to 5 unconnected
 # requests to queue up before we start refusing connections
 s.listen(5)
 
-print("Thruster server bound to {}:{}".format(HOST, PORT))
+print("Thruster server bound to {}:{}".format(HOST, CONTROLLER_PORT))
 
 while True:
     # wait for an incoming connection

@@ -9,6 +9,10 @@ fieldset {
 	border: none;
 }
 
+svg {
+	background-color: rgba(200, 200, 200, 0.1);
+}
+
 .x-major, .y-major {
 	stroke: rgba(200, 200, 200, 0.5);
 }

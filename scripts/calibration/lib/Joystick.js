@@ -5,12 +5,20 @@ class Joystick {
         this.width = width;
         this.height = height;
 
-        this.showPosition = true;
+        this._showPosition = true;
         this.xPosition = 0;
         this.yPosition = 0;
         this.controlRadius = 3.5;
 
         this.positionNode = null;
+    }
+
+    set showPosition(value) {
+        if (this._showPosition !== value) {
+            this._showPosition = value;
+
+            this.positionNode.setAttributeNS(null, "display", value ? "inline" : "none");
+        }
     }
 
     attach(node) {
@@ -34,20 +42,19 @@ class Joystick {
         g.appendChild(border);
 
         // draw position
-        if (this.showPosition) {
-            let position = document.createElementNS(svgns, "circle");
-            let cx = halfWidth + this.xPosition * (radius - this.controlRadius);
-            let cy = halfWidth + this.yPosition * (radius - this.controlRadius);
+        let position = document.createElementNS(svgns, "circle");
+        let cx = halfWidth + this.xPosition * (radius - this.controlRadius);
+        let cy = halfWidth + this.yPosition * (radius - this.controlRadius);
 
-            position.setAttributeNS(null, "cx", cx);
-            position.setAttributeNS(null, "cy", cy);
-            position.setAttributeNS(null, "r", this.controlRadius);
+        position.setAttributeNS(null, "cx", cx);
+        position.setAttributeNS(null, "cy", cy);
+        position.setAttributeNS(null, "r", this.controlRadius);
 
-            position.setAttributeNS(null, "class", "joystick-handle");
+        position.setAttributeNS(null, "class", "joystick-handle");
+        position.setAttributeNS(null, "display", this._showPosition ? "inline" : "none");
 
-            this.positionNode = position;
-            g.append(this.positionNode);
-        }
+        this.positionNode = position;
+        g.append(this.positionNode);
 
         // attach everything to specified node
         node.appendChild(g);

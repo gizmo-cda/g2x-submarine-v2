@@ -1,6 +1,5 @@
 from vector2d import Vector2D
 from interpolator import Interpolator
-from pwm_controller import PWMController
 from utils import map_range
 
 
@@ -25,19 +24,6 @@ from utils import map_range
 # thrusters, we may need to increase this value.
 PRECISION = 3
 
-# Set the sensitivity to be applied to each thruster. 0 indicates a linear
-# response which is the default when no sensitivity is applied. 1 indicates full
-# sensitivity. Values between 0 and 1 can be used to increase and to decrease
-# the overall sensitivity. Increasing sensivity dampens lower values and
-# amplifies larger values giving more precision at lower power levels.
-SENSITIVITY = 0.7
-
-# We use a cubic to apply sensitivity. If you find that full sensitivity
-# (dampening) does not give you fine enough control, you can increase the degree
-# of the polynomial used for dampening. Note that this must be a positive odd
-# number. Any other values will cause unexpected results.
-SENSITIVITY_POWER = 3.0
-
 # Define a series of comstants, one for each thruster
 HL = 0  # horizontal left
 VL = 1  # vertical left
@@ -61,7 +47,23 @@ FULL_FORWARD = 496
 
 
 class ThrusterController:
-    def __init__(self):
+
+    def __init__(self, simulate=False):
+        # Set the sensitivity to be applied to each thruster. 0 indicates a
+        # linear response which is the default when no sensitivity is applied. 1
+        # indicates full sensitivity. Values between 0 and 1 can be used to
+        # increase and to decrease the overall sensitivity. Increasing sensivity
+        # dampens lower values and amplifies larger values giving more precision
+        # at lower power levels.
+        self.sensitivity = 0.7
+
+        # We use a cubic to apply sensitivity. If you find that full sensitivity
+        # (dampening) does not give you fine enough control, you can increase\
+        # the degree of the polynomial used for dampening. Note that this must
+        # be a positive odd number. Any other values will cause unexpected
+        # results.
+        self.power = 3
+
         # setup motor controller. The PWM controller can control up to 16
         # different devices. We have to add devices, one for each thruster that
         # we can control. The first parameter is the human-friendly name of the
@@ -74,12 +76,17 @@ class ThrusterController:
         # be able to shuffle on/off times to even out the current draw from the
         # thrusters, but so far, that hasn't been an issue. It's even possible
         # that the PWM controller may do that for us already.
-        self.motor_controller = PWMController()
-        self.motor_controller.add_device("HL", HL, 0, NEUTRAL)
-        self.motor_controller.add_device("VL", VL, 0, NEUTRAL)
-        self.motor_controller.add_device("VC", VC, 0, NEUTRAL)
-        self.motor_controller.add_device("VR", VR, 0, NEUTRAL)
-        self.motor_controller.add_device("HR", HR, 0, NEUTRAL)
+        if simulate is False:
+            from pwm_controller import PWMController
+
+            self.motor_controller = PWMController()
+            self.motor_controller.add_device("HL", HL, 0, NEUTRAL)
+            self.motor_controller.add_device("VL", VL, 0, NEUTRAL)
+            self.motor_controller.add_device("VC", VC, 0, NEUTRAL)
+            self.motor_controller.add_device("VR", VR, 0, NEUTRAL)
+            self.motor_controller.add_device("HR", HR, 0, NEUTRAL)
+        else:
+            self.motor_controller = None
 
         # setup the joysticks. We use a 2D vector to represent the x and y
         # values of the joysticks.
@@ -265,48 +272,44 @@ class ThrusterController:
             self.set_motor(VR, front_right_value)
 
     def update_button(self, button, value):
-        global SENSITIVITY
-        global SENSITIVITY_POWER
-        show_sensitivity = False
-
-        # only process button up events
-        if value == 0:
-            if button == 0:
-                new_power = max(1.0, SENSITIVITY_POWER - 2.0)
-                if new_power != SENSITIVITY_POWER:
-                    SENSITIVITY_POWER = new_power
-                    show_sensitivity = True
-            elif button == 1:
-                new_sensitivity = max(0.0, SENSITIVITY - 0.1)
-                if new_sensitivity != SENSITIVITY:
-                    SENSITIVITY = new_sensitivity
-                    show_sensitivity = True
-            elif button == 2:
-                new_power = min(SENSITIVITY_POWER + 2.0, 9.0)
-                if new_power != SENSITIVITY_POWER:
-                    SENSITIVITY_POWER = new_power
-                    show_sensitivity = True
-            elif button == 3:
-                new_sensitivity = min(SENSITIVITY + 0.1, 1.0)
-                if new_sensitivity != SENSITIVITY:
-                    SENSITIVITY = new_sensitivity
-                    show_sensitivity = True
-            else:
-                print("button {} = {}".format(button, value))
-
-            if show_sensitivity:
-                print("Sensitiviy = {}, Exponent = {}".format(SENSITIVITY, SENSITIVITY_POWER))
+        # TODO: implement support for adjusting lights
+        pass
 
     def set_motor(self, motor_number, value):
-        motor = self.motor_controller.devices[motor_number]
-        value = self.apply_sensitivity(value)
-        pwm_value = int(map_range(value, -1.0, 1.0, FULL_REVERSE, FULL_FORWARD))
+        if self.motor_controller is not None:
+            motor = self.motor_controller.devices[motor_number]
+            value = self.apply_sensitivity(value)
+            pwm_value = int(map_range(value, -1.0, 1.0, FULL_REVERSE, FULL_FORWARD))
 
-        # print("setting motor {0} to {1}".format(motor_number, pwm_value))
-        motor.off = pwm_value
+            # print("setting motor {0} to {1}".format(motor_number, pwm_value))
+            motor.off = pwm_value
 
     def apply_sensitivity(self, value):
-        return SENSITIVITY * value**SENSITIVITY_POWER + (1.0 - SENSITIVITY) * value
+        return self.sensitivity * value**self.power + (1.0 - self.sensitivity) * value
+
+    def get_settings(self):
+        return {
+            'sensitivity': {
+                'strength': self.sensitivity,
+                'power': self.power
+            },
+            'thrusters': [
+                self.horizontal_left.to_array(),
+                self.vertical_left.to_array(),
+                self.vertical_center.to_array(),
+                self.vertical_right.to_array(),
+                self.horizontal_right.to_array()
+            ]
+        }
+
+    def set_settings(self, data):
+        self.sensitivity = data['sensitivity']['strength']
+        self.power = data['sensitivity']['power']
+        self.horizontal_left.from_array(data['thrusters'][0])
+        self.vertical_left.from_array(data['thrusters'][1])
+        self.vertical_center.from_array(data['thrusters'][2])
+        self.vertical_right.from_array(data['thrusters'][3])
+        self.horizontal_right.from_array(data['thrusters'][4])
 
 
 if __name__ == "__main__":

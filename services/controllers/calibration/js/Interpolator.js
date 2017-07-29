@@ -42,4 +42,13 @@ class Interpolator {
             return start.value + value_delta * percent;
         }
     }
+
+    to_array() {
+        return this.data.reduce((accum, item) => {
+            accum.push(item.index);
+            accum.push(item.value);
+
+            return accum;
+        }, []);
+    }
 }

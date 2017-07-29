@@ -12,7 +12,14 @@ let names = [
     "Vertical Center",
     "Vertical Right",
     "Horizontal Right",
-]
+];
+let assignedJoystick = [
+    0,
+    1,
+    1,
+    1,
+    0
+];
 
 function go() {
     document.onkeydown = handleKey;
@@ -76,6 +83,18 @@ function updateCharts() {
     iGraph.dataProvider = data.thrusters[activeThruster];
     sGraph.dataProvider = sensitivity;
     iwsGraph.dataProvider = iWithS;
+
+    // update active joysticks
+    var activeJoystick = assignedJoystick[activeThruster];
+
+    iGraph.joysticks.forEach((pair) => {
+        pair[0].showPosition = activeJoystick === 0;
+        pair[1].showPosition = activeJoystick === 1;
+    });
+    iwsGraph.joysticks.forEach((pair) => {
+        pair[0].showPosition = activeJoystick === 0;
+        pair[1].showPosition = activeJoystick === 1;
+    });
 
     // update all graphs
     iGraph.drawData();

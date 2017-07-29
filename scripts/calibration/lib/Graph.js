@@ -25,6 +25,7 @@ class Graph {
 
         this.showJoysticks = true;
         this.joystickSize = 22;
+        this.joysticks = [];
 
         this.rootNode = null;
         this.dataNode = null;
@@ -130,9 +131,14 @@ class Graph {
                 this.joystickSize - margin * 2
             );
 
-            right.showPosition = false;
+            right.xPosition = Math.cos(-radians);
+            right.yPosition = Math.sin(-radians);
 
             right.attach(this.rootNode);
+            
+            right.showPosition = false;     // NOTE: have to set after the joystick has been created
+
+            this.joysticks.push([left, right]);
         }
     }
 

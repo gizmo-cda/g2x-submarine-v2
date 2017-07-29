@@ -62,13 +62,13 @@ function processNewData(error, newData) {
         return interpolator;
     });
 
+    // create sensitivity data provider
+    sensitivity = new Sensitivity(data.sensitivity.strength, data.sensitivity.power);
+
     updateCharts();
 }
 
 function updateCharts() {
-    // create sensitivity data provider
-    sensitivity = new Sensitivity(data.sensitivity.strength, data.sensitivity.power);
-
     // create thruster with sensitivity provider
     iWithS = new InterpolatorWithSensitivity(data.thrusters[activeThruster], sensitivity);
 

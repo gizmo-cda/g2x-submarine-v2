@@ -3,6 +3,7 @@
 <head>
   <title>G2X Thruster Calibration</title>
   <link rel="stylesheet" type="text/css" href="/css/calibration.css">
+  <script type="text/javascript" src="/js/xhr.js"></script>
   <script type="text/javascript" src="/js/Utils.js"></script>
   <script type="text/javascript" src="/js/Joystick.js"></script>
   <script type="text/javascript" src="/js/Graph.js"></script>
@@ -22,13 +23,16 @@
   </fieldset>
   <fieldset>
     <label for="t">Sensitivity Strength: </label>
-    <input type="range" name="t" min="0" max="1" step="0.1" value="0.7" oninput="updateT(this.value)">
+    <input type="range" id="t" name="t" min="0" max="1" step="0.1" value="0.7" oninput="updateT(this.value)">
     <em id="tLabel">0.7</em>
   </fieldset>
   <fieldset>
     <label for="power">Sensitivity Power: </label>
-    <input type="range" name="power" min="3" max="9" step="2" value="3" oninput="updatePower(this.value)">
+    <input type="range" id="power" name="power" min="3" max="9" step="2" value="3" oninput="updatePower(this.value)">
     <em id="powerLabel">3</em>
   </fieldset>
+  <form>
+    <input type="button" value="Save" onclick="saveSettings()"/>
+  </form>
 </body>
 </html>

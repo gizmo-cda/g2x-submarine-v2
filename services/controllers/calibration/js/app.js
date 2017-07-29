@@ -31,6 +31,9 @@ function go() {
 function processNewData(error, newData) {
     data = newData;
 
+    // create sensitivity data provider
+    sensitivity = new Sensitivity(data.sensitivity.strength, data.sensitivity.power);
+
     // convert thruster data providers
     data.thrusters = data.thrusters.map(values => {
         let interpolator = new Interpolator();
@@ -42,10 +45,33 @@ function processNewData(error, newData) {
         return interpolator;
     });
 
-    // create sensitivity data provider
-    sensitivity = new Sensitivity(data.sensitivity.strength, data.sensitivity.power);
-
     updateCharts();
+
+    // update range elements
+    document.getElementById("t").value = data.sensitivity.strength;
+    document.getElementById("tLabel").innerHTML = data.sensitivity.strength;
+    document.getElementById("power").value = data.sensitivity.power;
+    document.getElementById("powerLabel").innerHTML = data.sensitivity.power;
+}
+
+function saveSettings() {
+    Data.sendData({
+        sensitivity: {
+            strength: sensitivity.t,
+            power: sensitivity.power
+        },
+        thrusters: [
+            data.thrusters[0].to_array(),
+            data.thrusters[1].to_array(),
+            data.thrusters[2].to_array(),
+            data.thrusters[3].to_array(),
+            data.thrusters[4].to_array()
+        ]
+    }, function(error) {
+        if (error) {
+            console.error(error);
+        }
+    })
 }
 
 function createCharts() {

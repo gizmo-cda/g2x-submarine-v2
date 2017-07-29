@@ -95,7 +95,7 @@ function createCharts() {
 
     iGraph = new Graph(
         margin,
-        margin + 0 * (200 + padding),
+        margin + 0 * (height + padding),
         width,
         height,
         0, 360,
@@ -108,10 +108,10 @@ function createCharts() {
     );
 
     sGraph = new Graph(
+        margin + 1 * (width + padding) + padding,
         margin,
-        margin + 1 * (200 + padding),
-        width,
-        height,
+        height - 22,
+        height - 22,
         -1, 1,
         -1, 1,
         4,
@@ -120,10 +120,11 @@ function createCharts() {
         10,
         null
     );
+    sGraph.showJoysticks = false;
 
     iwsGraph = new Graph(
         margin,
-        margin + 2 * (200 + padding),
+        margin + 1 * (height + padding),
         width,
         height,
         0, 360,

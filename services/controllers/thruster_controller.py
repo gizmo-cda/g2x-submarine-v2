@@ -1,3 +1,5 @@
+import os
+import json
 from vector2d import Vector2D
 from interpolator import Interpolator
 from utils import map_range
@@ -45,25 +47,13 @@ FULL_REVERSE = 246
 NEUTRAL = 369
 FULL_FORWARD = 496
 
+# Use this file to load/store thruster and sensitivity settings
+SETTINGS_FILE = './thruster_settings.json'
+
 
 class ThrusterController:
 
     def __init__(self, simulate=False):
-        # Set the sensitivity to be applied to each thruster. 0 indicates a
-        # linear response which is the default when no sensitivity is applied. 1
-        # indicates full sensitivity. Values between 0 and 1 can be used to
-        # increase and to decrease the overall sensitivity. Increasing sensivity
-        # dampens lower values and amplifies larger values giving more precision
-        # at lower power levels.
-        self.sensitivity = 0.7
-
-        # We use a cubic to apply sensitivity. If you find that full sensitivity
-        # (dampening) does not give you fine enough control, you can increase\
-        # the degree of the polynomial used for dampening. Note that this must
-        # be a positive odd number. Any other values will cause unexpected
-        # results.
-        self.power = 3
-
         # setup motor controller. The PWM controller can control up to 16
         # different devices. We have to add devices, one for each thruster that
         # we can control. The first parameter is the human-friendly name of the
@@ -93,48 +83,70 @@ class ThrusterController:
         self.j1 = Vector2D()
         self.j2 = Vector2D()
 
-        # setup the various interpolators for each thruster. Each item we add
-        # to the interpolator consists of two values: an angle in degrees and a
-        # thrust value. An interpolator works by returning a value for any given
-        # input value. More specifically in this case, we will give each
-        # interpolator an angle and it will return a thrust value for that
-        # angle. Since we have only given the interpolator values for very
-        # specific angles, it will have to determine values for angles we have
-        # not provided. It does this using linear interpolation.
+        # create interpolators
         self.horizontal_left = Interpolator()
-        self.horizontal_left.addIndexValue(0.0, -1.0)
-        self.horizontal_left.addIndexValue(90.0, 1.0)
-        self.horizontal_left.addIndexValue(180.0, 1.0)
-        self.horizontal_left.addIndexValue(270.0, -1.0)
-        self.horizontal_left.addIndexValue(360.0, -1.0)
-
         self.vertical_left = Interpolator()
-        self.vertical_left.addIndexValue(0.0, 1.0)
-        self.vertical_left.addIndexValue(90.0, -1.0)
-        self.vertical_left.addIndexValue(180.0, -1.0)
-        self.vertical_left.addIndexValue(270.0, 1.0)
-        self.vertical_left.addIndexValue(360.0, 1.0)
-
         self.vertical_center = Interpolator()
-        self.vertical_center.addIndexValue(0.0, 0.0)
-        self.vertical_center.addIndexValue(90.0, 1.0)
-        self.vertical_center.addIndexValue(180.0, 0.0)
-        self.vertical_center.addIndexValue(270.0, -1.0)
-        self.vertical_center.addIndexValue(360.0, 0.0)
-
         self.vertical_right = Interpolator()
-        self.vertical_right.addIndexValue(0.0, -1.0)
-        self.vertical_right.addIndexValue(90.0, -1.0)
-        self.vertical_right.addIndexValue(180.0, 1.0)
-        self.vertical_right.addIndexValue(270.0, 1.0)
-        self.vertical_right.addIndexValue(360.0, -1.0)
-
         self.horizontal_right = Interpolator()
-        self.horizontal_right.addIndexValue(0.0, 1.0)
-        self.horizontal_right.addIndexValue(90.0, 1.0)
-        self.horizontal_right.addIndexValue(180.0, -1.0)
-        self.horizontal_right.addIndexValue(270.0, -1.0)
-        self.horizontal_right.addIndexValue(360.0, 1.0)
+
+        # setup interpolators from a file or manually
+        if os.path.isfile(SETTINGS_FILE):
+            with open(SETTINGS_FILE, 'r') as f:
+                self.set_settings(json.load(f), False)
+        else:
+            # Set the sensitivity to be applied to each thruster. 0 indicates a
+            # linear response which is the default when no sensitivity is applied. 1
+            # indicates full sensitivity. Values between 0 and 1 can be used to
+            # increase and to decrease the overall sensitivity. Increasing sensivity
+            # dampens lower values and amplifies larger values giving more precision
+            # at lower power levels.
+            self.sensitivity = 0.7
+
+            # We use a cubic to apply sensitivity. If you find that full sensitivity
+            # (dampening) does not give you fine enough control, you can increase\
+            # the degree of the polynomial used for dampening. Note that this must
+            # be a positive odd number. Any other values will cause unexpected
+            # results.
+            self.power = 3
+
+            # setup the various interpolators for each thruster. Each item we add
+            # to the interpolator consists of two values: an angle in degrees and a
+            # thrust value. An interpolator works by returning a value for any given
+            # input value. More specifically in this case, we will give each
+            # interpolator an angle and it will return a thrust value for that
+            # angle. Since we have only given the interpolator values for very
+            # specific angles, it will have to determine values for angles we have
+            # not provided. It does this using linear interpolation.
+            self.horizontal_left.addIndexValue(0.0, -1.0)
+            self.horizontal_left.addIndexValue(90.0, 1.0)
+            self.horizontal_left.addIndexValue(180.0, 1.0)
+            self.horizontal_left.addIndexValue(270.0, -1.0)
+            self.horizontal_left.addIndexValue(360.0, -1.0)
+
+            self.vertical_left.addIndexValue(0.0, 1.0)
+            self.vertical_left.addIndexValue(90.0, -1.0)
+            self.vertical_left.addIndexValue(180.0, -1.0)
+            self.vertical_left.addIndexValue(270.0, 1.0)
+            self.vertical_left.addIndexValue(360.0, 1.0)
+
+            self.vertical_center.addIndexValue(0.0, 0.0)
+            self.vertical_center.addIndexValue(90.0, 1.0)
+            self.vertical_center.addIndexValue(180.0, 0.0)
+            self.vertical_center.addIndexValue(270.0, -1.0)
+            self.vertical_center.addIndexValue(360.0, 0.0)
+
+            self.vertical_right.addIndexValue(0.0, -1.0)
+            self.vertical_right.addIndexValue(90.0, -1.0)
+            self.vertical_right.addIndexValue(180.0, 1.0)
+            self.vertical_right.addIndexValue(270.0, 1.0)
+            self.vertical_right.addIndexValue(360.0, -1.0)
+
+            self.horizontal_right.addIndexValue(0.0, 1.0)
+            self.horizontal_right.addIndexValue(90.0, 1.0)
+            self.horizontal_right.addIndexValue(180.0, -1.0)
+            self.horizontal_right.addIndexValue(270.0, -1.0)
+            self.horizontal_right.addIndexValue(360.0, 1.0)
 
         # setup ascent/descent controllers
         self.ascent = -1.0
@@ -302,7 +314,13 @@ class ThrusterController:
             ]
         }
 
-    def set_settings(self, data):
+    def set_settings(self, data, save=True):
+        # save settings for future loading
+        if save:
+            with open(SETTINGS_FILE, 'w') as out:
+                out.write(json.dumps(data, indent=2))
+
+        # update current settings
         self.sensitivity = data['sensitivity']['strength']
         self.power = data['sensitivity']['power']
         self.horizontal_left.from_array(data['thrusters'][0])

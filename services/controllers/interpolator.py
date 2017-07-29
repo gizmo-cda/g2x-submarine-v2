@@ -1,4 +1,5 @@
 class Interpolator:
+
     def __init__(self):
         self.data = []
 
@@ -29,6 +30,20 @@ class Interpolator:
             value_delta = end[1] - start[1]
 
             return start[1] + value_delta * percent
+
+    def to_array(self):
+        result = []
+
+        for (index, value) in self.data:
+            result.append(index)
+            result.append(value)
+
+        return result
+
+    def from_array(self, array):
+        self.data = []
+        for i in range(0, len(array), 2):
+            self.addIndexValue(array[i], array[i + 1])
 
 
 if __name__ == "__main__":

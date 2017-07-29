@@ -2,6 +2,7 @@ let svgns = "http://www.w3.org/2000/svg";
 
 var sensitivity, iWithS;
 var iGraph, sGraph, iwsGraph;
+var submarine;
 
 var data;
 var activeThruster = 0;
@@ -27,34 +28,6 @@ function go() {
     Data.getData(processNewData);
 }
 
-function handleKey(e) {
-    switch (e.keyCode) {
-        case 38:
-            // up arrow
-            break;
-
-        case 40:
-            // down arrow
-            break;
-
-        case 37:
-            // left arrow
-            if (activeThruster > 0) {
-                activeThruster--;
-                updateCharts();
-            }
-            break;
-
-        case 39:
-            // right arrow
-            if (activeThruster < data.thrusters.length - 1) {
-                activeThruster++;
-                updateCharts();
-            }
-            break;
-    }
-}
-
 function processNewData(error, newData) {
     data = newData;
 
@@ -73,35 +46,6 @@ function processNewData(error, newData) {
     sensitivity = new Sensitivity(data.sensitivity.strength, data.sensitivity.power);
 
     updateCharts();
-}
-
-function updateCharts() {
-    // create thruster with sensitivity provider
-    iWithS = new InterpolatorWithSensitivity(data.thrusters[activeThruster], sensitivity);
-
-    // apply data providers to graphs
-    iGraph.dataProvider = data.thrusters[activeThruster];
-    sGraph.dataProvider = sensitivity;
-    iwsGraph.dataProvider = iWithS;
-
-    // update active joysticks
-    var activeJoystick = assignedJoystick[activeThruster];
-
-    iGraph.joysticks.forEach((pair) => {
-        pair[0].showPosition = activeJoystick === 0;
-        pair[1].showPosition = activeJoystick === 1;
-    });
-    iwsGraph.joysticks.forEach((pair) => {
-        pair[0].showPosition = activeJoystick === 0;
-        pair[1].showPosition = activeJoystick === 1;
-    });
-
-    // update all graphs
-    iGraph.drawData();
-    sGraph.drawData();
-    iwsGraph.drawData();
-
-    document.getElementById("thruster").innerHTML = names[activeThruster];
 }
 
 function createCharts() {
@@ -134,7 +78,7 @@ function createCharts() {
         -1, 1,
         -1, 1,
         4,
-        8,
+        4,
         360,
         10,
         null
@@ -155,9 +99,18 @@ function createCharts() {
         null
     );
 
+    submarine = new Submarine(
+        margin + 1 * (width + padding) + padding,
+        margin + 1 * (height + padding),
+        height - 22,
+        height - 22
+    );
+    submarine.onchange = updateActiveThruster;
+
     iGraph.attach(chart);
     sGraph.attach(chart);
     iwsGraph.attach(chart);
+    submarine.attach(chart);
 }
 
 function createInterpolator() {
@@ -170,6 +123,66 @@ function createInterpolator() {
     interpolator.addIndexValue(360.0, -1.0)
 
     return interpolator;
+}
+
+function handleKey(e) {
+    switch (e.keyCode) {
+        case 38:
+            // up arrow
+            break;
+
+        case 40:
+            // down arrow
+            break;
+
+        case 37:
+            // left arrow
+            if (activeThruster > 0) {
+                activeThruster--;
+                updateCharts();
+            }
+            break;
+
+        case 39:
+            // right arrow
+            if (activeThruster < data.thrusters.length - 1) {
+                activeThruster++;
+                updateCharts();
+            }
+            break;
+    }
+}
+
+function updateCharts() {
+    // create thruster with sensitivity provider
+    iWithS = new InterpolatorWithSensitivity(data.thrusters[activeThruster], sensitivity);
+
+    // apply data providers to graphs
+    iGraph.dataProvider = data.thrusters[activeThruster];
+    sGraph.dataProvider = sensitivity;
+    iwsGraph.dataProvider = iWithS;
+
+    // update active joysticks
+    var activeJoystick = assignedJoystick[activeThruster];
+
+    iGraph.joysticks.forEach((pair) => {
+        pair[0].showPosition = activeJoystick === 0;
+        pair[1].showPosition = activeJoystick === 1;
+    });
+    iwsGraph.joysticks.forEach((pair) => {
+        pair[0].showPosition = activeJoystick === 0;
+        pair[1].showPosition = activeJoystick === 1;
+    });
+
+    // update all graphs
+    iGraph.drawData();
+    sGraph.drawData();
+    iwsGraph.drawData();
+
+    // update submarine graphic
+    submarine.activeThruster = activeThruster;
+
+    document.getElementById("thruster").innerHTML = names[activeThruster];
 }
 
 function updateT(value) {
@@ -188,4 +201,9 @@ function updatePower(value) {
 
     sGraph.drawData();
     iwsGraph.drawData();
+}
+
+function updateActiveThruster(submarine) {
+    activeThruster = submarine.activeThruster;
+    updateCharts();
 }

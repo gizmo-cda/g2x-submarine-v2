@@ -32,3 +32,7 @@ svg {
 	stroke: none;
 	fill: rgba(255, 128, 0, 0.75);
 }
+
+.thruster {
+	stroke: rgba(200, 200, 200, 0.5);
+}

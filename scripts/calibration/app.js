@@ -6,12 +6,51 @@ var iGraph, sGraph, iwsGraph;
 var data;
 var activeThruster = 0;
 
+let names = [
+    "Horizontal Left",
+    "Vertical Left",
+    "Vertical Center",
+    "Vertical Right",
+    "Horizontal Right",
+]
+
 function go() {
+    document.onkeydown = handleKey;
     createCharts();
-    Data.getData(applyToCharts);
+    Data.getData(processNewData);
 }
 
-function applyToCharts(error, data) {
+function handleKey(e) {
+    switch (e.keyCode) {
+        case 38:
+            // up arrow
+            break;
+
+        case 40:
+            // down arrow
+            break;
+
+        case 37:
+            // left arrow
+            if (activeThruster > 0) {
+                activeThruster--;
+                updateCharts();
+            }
+            break;
+
+        case 39:
+            // right arrow
+            if (activeThruster < data.thrusters.length - 1) {
+                activeThruster++;
+                updateCharts();
+            }
+            break;
+    }
+}
+
+function processNewData(error, newData) {
+    data = newData;
+
     // convert thruster data providers
     data.thrusters = data.thrusters.map(values => {
         let interpolator = new Interpolator();
@@ -23,6 +62,10 @@ function applyToCharts(error, data) {
         return interpolator;
     });
 
+    updateCharts();
+}
+
+function updateCharts() {
     // create sensitivity data provider
     sensitivity = new Sensitivity(data.sensitivity.strength, data.sensitivity.power);
 
@@ -38,6 +81,8 @@ function applyToCharts(error, data) {
     iGraph.drawData();
     sGraph.drawData();
     iwsGraph.drawData();
+
+    document.getElementById("thruster").innerHTML = names[activeThruster];
 }
 
 function createCharts() {

@@ -16,12 +16,16 @@
   <svg id="chart" xmlns="https://www.w3.org/2000/svg" width="670" height="665">
   </svg>
   <fieldset>
-    <label for="t">Sensitivity Strength:</label>
+    <label for="thruster">Active Thruster: </label>
+    <em id="thruster">Horizontal Left</label>
+  </fieldset>
+  <fieldset>
+    <label for="t">Sensitivity Strength: </label>
     <input type="range" name="t" min="0" max="1" step="0.1" value="0.7" oninput="updateT(this.value)">
     <em id="tLabel">0.7</em>
   </fieldset>
   <fieldset>
-    <label for="power">Sensitivity Power:</label>
+    <label for="power">Sensitivity Power: </label>
     <input type="range" name="power" min="3" max="9" step="2" value="3" oninput="updatePower(this.value)">
     <em id="powerLabel">3</em>
   </fieldset>

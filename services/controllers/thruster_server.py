@@ -1,21 +1,32 @@
 #!/usr/bin/env python3
 
+import sys
 import socket
 import atexit
 import _thread
 from message import Message
 from thruster_controller import ThrusterController
 
+# Set default values before processing command line arguments
+SIMULATE = False
+CALIBRATE = False
 # It is possible for a host to have multiple IP addresses. Using 0.0.0.0
 # will listen on all network interfaces on this host
 HOST = "0.0.0.0"
 CONTROLLER_PORT = 9999
 CALIBRATION_PORT = 9998
 
-# These will eventually be set from the command-line
-SIMULATE = True
-CALIBRATE = True
+# process command line args
+for i in range(1, len(sys.argv)):
+    arg = sys.argv[i]
 
+    if arg == "-c" or arg == "--calibrate":
+        CALIBRATE = True
+    elif arg == "-s" or arg == "--simulate":
+        SIMULATE = True
+    # TODO: add command-line args for setting host and ports
+
+# create thruster controller globally so we can share it between threads
 controller = ThrusterController(SIMULATE)
 
 
@@ -47,6 +58,8 @@ def on_calibration_server(controller):
     def put_settings():
         controller.set_settings(request.json)
         return {'status': 'OK'}
+
+    print("Calibration web server bound to {}:{}".format(HOST, CONTROLLER_PORT))
 
     run(host=HOST, port=CALIBRATION_PORT)
 

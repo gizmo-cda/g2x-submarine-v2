@@ -77,6 +77,13 @@ class Handle {
         node.appendChild(this.rootNode);
     }
 
+    detach() {
+        if (this.rootNode !== null) {
+            this.rootNode.removeEventListener("mousedown", this);
+            this.rootNode.parentNode.removeChild(this.rootNode);
+        }
+    }
+
     createDragNode(node) {
         let dragger = document.createElementNS(svgns, "circle");
 

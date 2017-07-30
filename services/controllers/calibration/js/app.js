@@ -80,9 +80,12 @@ function createCharts() {
     let margin = 35;
     let padding = 15;
     let width = 600;
-    let height = 200;
+    let height = 300;
     let joyStickHeight = 22;
     let subWidth = height - joyStickHeight;
+
+    chart.setAttributeNS(null, "width", margin + subWidth + padding + width + + joyStickHeight + margin);
+    chart.setAttributeNS(null, "height", margin + height + padding + height + margin);
 
     submarine = new Submarine(
         margin,
@@ -127,7 +130,7 @@ function createCharts() {
         0, 360,
         -1, 1,
         4,
-        8,
+        10,
         360,
         10
     );

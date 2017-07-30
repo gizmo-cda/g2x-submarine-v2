@@ -81,6 +81,12 @@ class Handle {
         if (this.rootNode !== null) {
             this.rootNode.removeEventListener("mousedown", this);
             this.rootNode.parentNode.removeChild(this.rootNode);
+            this.rootNode = null;
+        }
+
+        if (this.dragNode !== null) {
+            this.dragNode.parentNode.removeChild(this.dragNode);
+            this.dragNode = null;
         }
     }
 

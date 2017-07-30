@@ -34,6 +34,8 @@ class InterpolatorEditor {
                 let y = map(entry.value, this.yMin, this.yMax, bottom, this.bbox.y);
                 let handle = new Handle(this, x, y);
 
+                handle.bounds = this.bbox;
+
                 this.handles.push(handle);
                 handle.attach(this.rootNode);
             });

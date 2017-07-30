@@ -93,17 +93,16 @@ function createCharts() {
     submarine.onchange = updateActiveThruster;
 
     iGraph = new Graph(
-        margin + subWidth + 2 * padding,
-        margin + 0 * (height + padding),
-        width,
-        height,
-        0, 360,
-        -1, 1,
-        4,
-        10,
-        360,
-        10,
-        null
+        margin + subWidth + 2 * padding,    // x
+        margin + 0 * (height + padding),    // y
+        width,                              // width
+        height,                             // height
+        0, 360,                             // xMin, xMax 
+        -1, 1,                              // yMin, yMax
+        4,                                  // xMajorSubdivisions
+        10,                                 // yMajorSubdivisions
+        360,                                // xMinorSubdivisions
+        10                                  // yMinorSubdivisions
     );
 
     sGraph = new Graph(
@@ -116,8 +115,7 @@ function createCharts() {
         4,
         4,
         360,
-        10,
-        null
+        10
     );
     sGraph.showJoysticks = false;
 
@@ -131,8 +129,7 @@ function createCharts() {
         4,
         8,
         360,
-        10,
-        null
+        10
     );
 
     iGraph.attach(chart);

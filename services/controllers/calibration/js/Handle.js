@@ -97,7 +97,8 @@ class Handle {
         dragger.setAttributeNS(null, "cy", this.y);
         dragger.setAttributeNS(null, "r", 40);
         dragger.setAttributeNS(null, "fill", "none");
-        dragger.setAttributeNS(null, "pointer-events", "fill");
+        // dragger.setAttributeNS(null, "fill-opacity", 0.25);
+        dragger.setAttributeNS(null, "pointer-events", "none");
 
         this.dragNode = dragger;
         node.appendChild(this.dragNode);
@@ -116,6 +117,7 @@ class Handle {
         this.rootNode.removeEventListener("mousedown", this);
         this.rootNode.setAttributeNS(null, "pointer-events", "none");
 
+        this.dragNode.setAttributeNS(null, "pointer-events", "fill");
         this.dragNode.addEventListener("mousemove", this);
         this.dragNode.addEventListener("mouseup", this);
     }
@@ -150,6 +152,7 @@ class Handle {
 
         this.dragNode.removeEventListener("mousemove", this);
         this.dragNode.removeEventListener("mouseup", this);
+        this.dragNode.setAttributeNS(null, "pointer-events", "none");
 
         this.rootNode.addEventListener("mousedown", this);
         this.rootNode.setAttributeNS(null, "pointer-events", "fill");

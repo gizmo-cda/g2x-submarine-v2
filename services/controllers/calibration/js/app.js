@@ -122,16 +122,16 @@ function createCharts() {
 
     // top-right
     iGraph = new Graph(
-        margin + submarineSize + 2 * padding,    // x
-        margin + 0 * (height + padding),    // y
-        width,                              // width
-        height,                             // height
-        0, 360,                             // xMin, xMax 
-        -1, 1,                              // yMin, yMax
-        4,                                  // xMajorSubdivisions
-        10,                                 // yMajorSubdivisions
-        360,                                // xMinorSubdivisions
-        10                                  // yMinorSubdivisions
+        margin + submarineSize + 2 * padding,   // x
+        margin + 0 * (height + padding),        // y
+        width,                                  // width
+        height,                                 // height
+        0, 360,                                 // xMin, xMax 
+        -1, 1,                                  // yMin, yMax
+        4,                                      // xMajorSubdivisions
+        20,                                     // yMajorSubdivisions
+        360,                                    // xMinorSubdivisions
+        10                                      // yMinorSubdivisions
     );
 
     // bottom-left
@@ -158,7 +158,7 @@ function createCharts() {
         0, 360,
         -1, 1,
         4,
-        10,
+        20,
         360,
         10
     );

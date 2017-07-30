@@ -17,10 +17,7 @@ class InterpolatorEditor {
     set interpolator(value) {
         if (this._interpolator !== value) {
             this._interpolator = value;
-
-            if (this.rootNode !== null && this.rootNode !== undefined) {
-                this.createHandles();
-            }
+            this.createHandles();
         }
     }
 
@@ -37,28 +34,30 @@ class InterpolatorEditor {
     }
 
     createHandles() {
-        if (this.handles.length > 0) {
-            this.handles.forEach(handle => {
-                handle.detach();
-            });
+        if (this.rootNode !== null && this.rootNode !== undefined) {
+            if (this.handles.length > 0) {
+                this.handles.forEach(handle => {
+                    handle.detach();
+                });
 
-            this.handles = [];
-        }
+                this.handles = [];
+            }
 
-        if (this._interpolator !== null && this._interpolator !== undefined) {
-            let right = this.bbox.x + this.bbox.width;
-            let bottom = this.bbox.x + this.bbox.height;
+            if (this._interpolator !== null && this._interpolator !== undefined) {
+                let right = this.bbox.x + this.bbox.width;
+                let bottom = this.bbox.x + this.bbox.height;
 
-            this._interpolator.data.forEach(entry => {
-                let x = map(entry.index, this.xMin, this.xMax, this.bbox.x, right);
-                let y = map(entry.value, this.yMin, this.yMax, bottom, this.bbox.y);
-                let handle = new Handle(this, x, y);
+                this._interpolator.data.forEach(entry => {
+                    let x = map(entry.index, this.xMin, this.xMax, this.bbox.x, right);
+                    let y = map(entry.value, this.yMin, this.yMax, bottom, this.bbox.y);
+                    let handle = new Handle(this, x, y);
 
-                handle.bounds = this.bbox;
+                    handle.bounds = this.bbox;
 
-                this.handles.push(handle);
-                handle.attach(this.rootNode);
-            });
+                    this.handles.push(handle);
+                    handle.attach(this.rootNode);
+                });
+            }
         }
     }
 

@@ -2,6 +2,7 @@ import struct
 
 
 class Message:
+
     def __init__(self, buffer=bytes([0, 0, 0, 0, 0])):
         b1 = buffer[0]
         b2 = buffer[1:]

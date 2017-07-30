@@ -2,6 +2,7 @@ import Adafruit_PCA9685
 
 
 class Device:
+
     def __init__(self, parent, name, channel, on, off):
         self.parent = parent
         self.name = name

@@ -7,6 +7,7 @@ from pymongo import MongoClient
 
 
 class Zone(tzinfo):
+
     def __init__(self, offset, isdst, name):
         self.offset = offset
         self.isdst = isdst

@@ -28,6 +28,16 @@ class InterpolatorEditor {
     attach(node) {
         this.rootNode = document.createElementNS(svgns, "g");
 
+        let rect = document.createElementNS(svgns, "rect");
+        rect.setAttributeNS(null, "x", this.bbox.x);
+        rect.setAttributeNS(null, "y", this.bbox.y);
+        rect.setAttributeNS(null, "width", this.bbox.width);
+        rect.setAttributeNS(null, "height", this.bbox.height);
+        rect.setAttributeNS(null, "fill", "none");
+        rect.setAttributeNS(null, "pointer-events", "fill");
+        rect.addEventListener("mousedown", this);
+        node.appendChild(rect);
+
         this.createHandles();
 
         node.appendChild(this.rootNode);
@@ -81,10 +91,31 @@ class InterpolatorEditor {
 
             this._interpolator.addIndexValue(index, value);
 
-            // TODO: these should not be called from here
             if (this.onchange !== null && this.onchange !== undefined) {
                 this.onchange();
             }
+        }
+    }
+
+    handleEvent(e) {
+        this[e.type](e);
+    }
+
+    mousedown(e) {
+        let right = this.bbox.x + this.bbox.width;
+        let bottom = this.bbox.x + this.bbox.height;
+
+        // TODO: using iGraph directly here, which is wrong
+        // need to use CTM instead
+        let index = map(e.clientX - iGraph.x, this.bbox.x, right, this.xMin, this.xMax);
+        let value = map(e.clientY - iGraph.y, bottom, this.bbox.y, this.yMin, this.yMax);
+
+        this._interpolator.addIndexValue(index, value);
+
+        this.createHandles();
+
+        if (this.onchange !== null && this.onchange !== undefined) {
+            this.onchange();
         }
     }
 }

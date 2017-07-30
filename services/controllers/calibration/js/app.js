@@ -81,9 +81,19 @@ function createCharts() {
     let padding = 15;
     let width = 600;
     let height = 200;
+    let joyStickHeight = 22;
+    let subWidth = height - joyStickHeight;
+
+    submarine = new Submarine(
+        margin,
+        margin,
+        subWidth,
+        subWidth
+    );
+    submarine.onchange = updateActiveThruster;
 
     iGraph = new Graph(
-        margin,
+        margin + subWidth + 2 * padding,
         margin + 0 * (height + padding),
         width,
         height,
@@ -97,10 +107,10 @@ function createCharts() {
     );
 
     sGraph = new Graph(
-        margin + 1 * (width + padding) + padding,
         margin,
-        height - 22,
-        height - 22,
+        margin + 1 * (height + padding),
+        subWidth,
+        subWidth,
         -1, 1,
         -1, 1,
         4,
@@ -112,7 +122,7 @@ function createCharts() {
     sGraph.showJoysticks = false;
 
     iwsGraph = new Graph(
-        margin,
+        margin + subWidth + 2 * padding,
         margin + 1 * (height + padding),
         width,
         height,
@@ -124,14 +134,6 @@ function createCharts() {
         10,
         null
     );
-
-    submarine = new Submarine(
-        margin + 1 * (width + padding) + padding,
-        margin + 1 * (height + padding),
-        height - 22,
-        height - 22
-    );
-    submarine.onchange = updateActiveThruster;
 
     iGraph.attach(chart);
     sGraph.attach(chart);

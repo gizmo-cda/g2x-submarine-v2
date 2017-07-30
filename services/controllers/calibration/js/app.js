@@ -67,10 +67,15 @@ function processNewData(error, newData) {
     );
     editor.interpolator = iGraph.dataProvider;
     editor.attach(iGraph.rootNode);
+    editor.onchange = () => {
+        iGraph.drawData();
+        iwsGraph.drawData();
+    }
 }
 
 function saveSettings() {
     Data.sendData({
+        version: 1,
         sensitivity: {
             strength: sensitivity.t,
             power: sensitivity.power

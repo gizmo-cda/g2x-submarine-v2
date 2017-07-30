@@ -10,6 +10,8 @@ class InterpolatorEditor {
         this.rootNode;
         this.currentHandle = null;
         this.handles = [];
+
+        this.onchange = null;
     }
 
     set interpolator(value) {
@@ -60,8 +62,10 @@ class InterpolatorEditor {
 
             this._interpolator.addIndexValue(index, value);
 
-            // TODO: this should not be called directly
-            iGraph.drawData();
+            // TODO: these should not be called from here
+            if (this.onchange !== null && this.onchange !== undefined) {
+                this.onchange();
+            }
         }
     }
 }

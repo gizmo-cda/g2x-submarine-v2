@@ -164,10 +164,10 @@ function createCharts() {
     );
 
     // initial render
+    submarine.attach(chart);
     iGraph.attach(chart);
     sGraph.attach(chart);
     iwsGraph.attach(chart);
-    submarine.attach(chart);
 }
 
 function handleKey(e) {

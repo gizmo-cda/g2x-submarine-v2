@@ -37,6 +37,17 @@ class Submarine {
         this.rootNode.setAttributeNS(null, "transform", `translate(${this.x}, ${this.y})`);
 
         // create background
+        let bbox = this.thrusterBoundingBox();
+        let rect = document.createElementNS(svgns, "rect");
+
+        rect.setAttributeNS(null, "x", bbox.x);
+        rect.setAttributeNS(null, "y", bbox.y);
+        rect.setAttributeNS(null, "width", bbox.width);
+        rect.setAttributeNS(null, "height", bbox.height);
+
+        rect.setAttributeNS(null, "class", "submarine-background");
+
+        this.rootNode.appendChild(rect);
 
         // create thrusters
         this.thrusters = [
@@ -61,35 +72,38 @@ class Submarine {
     }
 
     createThruster(type, position) {
+        let bbox = this.thrusterBoundingBox();
         let padding = 3;
-        let itemWidth = this.width / 5;
-        let halfItemWidth = itemWidth * 0.5;
-        let actualWidth = itemWidth - 2 * padding;
+
+        let columnWidth = bbox.width / 5;
+        let columnStart = bbox.x + columnWidth * position;
+        let columnEnd = columnStart + columnWidth;
 
         switch (type) {
             case 0:
                 let rect = document.createElementNS(svgns, "rect");
                 
-                rect.setAttributeNS(null, "x", padding + position * itemWidth);
-                rect.setAttributeNS(null, "y", padding);
-                rect.setAttributeNS(null, "width", actualWidth);
-                rect.setAttributeNS(null, "height", actualWidth);
+                rect.setAttributeNS(null, "x", columnStart + padding);
+                rect.setAttributeNS(null, "y", bbox.y + padding);
+                rect.setAttributeNS(null, "width", columnWidth - 2 * padding);
+                rect.setAttributeNS(null, "height", columnWidth - 2 * padding);
 
                 return rect;
                 break;
 
             case 1:
                 let circle = document.createElementNS(svgns, "circle");
+                let r = (columnWidth - 2 * padding) * 0.5
 
-                circle.setAttributeNS(null, "cx", position * itemWidth + halfItemWidth);
-                circle.setAttributeNS(null, "r", actualWidth * 0.5);
+                circle.setAttributeNS(null, "cx", (columnStart + columnEnd) * 0.5);
+                circle.setAttributeNS(null, "r", r);
 
                 // hack for vertical-center
                 if (position === 2) {
-                    circle.setAttributeNS(null, "cy", this.height - padding - halfItemWidth);
+                    circle.setAttributeNS(null, "cy", bbox.y + bbox.height - padding - r);
                 }
                 else {
-                    circle.setAttributeNS(null, "cy", halfItemWidth);
+                    circle.setAttributeNS(null, "cy", bbox.y + padding + r);
                 }
 
                 return circle;
@@ -97,6 +111,17 @@ class Submarine {
 
             default:
                 throw new Error("Unknown thruster type: " + type);
+        }
+    }
+
+    thrusterBoundingBox() {
+        let padding = 6;
+
+        return {
+            x: padding,
+            y: padding,
+            width: this.width - 2 * padding,
+            height: this.height - 2 * padding
         }
     }
 

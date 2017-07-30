@@ -33,6 +33,10 @@ svg {
 	fill: rgba(255, 128, 0, 0.75);
 }
 
+.submarine-background {
+	fill: rgba(200, 200, 200, 0.1);
+}
+
 .thruster {
 	stroke: rgba(200, 200, 200, 0.5);
 }

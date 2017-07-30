@@ -15,7 +15,13 @@ class InterpolatorEditor {
     }
 
     set interpolator(value) {
-        this._interpolator = value;
+        if (this._interpolator !== value) {
+            this._interpolator = value;
+
+            if (this.rootNode !== null && this.rootNode !== undefined) {
+                this.createHandles();
+            }
+        }
     }
 
     get interpolator() {
@@ -24,6 +30,20 @@ class InterpolatorEditor {
 
     attach(node) {
         this.rootNode = document.createElementNS(svgns, "g");
+
+        this.createHandles();
+
+        node.appendChild(this.rootNode);
+    }
+
+    createHandles() {
+        if (this.handles.length > 0) {
+            this.handles.forEach(handle => {
+                handle.detach();
+            });
+
+            this.handles = [];
+        }
 
         if (this._interpolator !== null && this._interpolator !== undefined) {
             let right = this.bbox.x + this.bbox.width;
@@ -40,8 +60,6 @@ class InterpolatorEditor {
                 handle.attach(this.rootNode);
             });
         }
-
-        node.appendChild(this.rootNode);
     }
 
     onhandlemove(handle) {

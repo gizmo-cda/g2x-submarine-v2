@@ -100,7 +100,7 @@ function saveSettings() {
 }
 
 function createCharts() {
-    let margin        = 35;
+    let margin        = 50;
     let padding       = 15;
     let width         = 600;
     let height        = 300;

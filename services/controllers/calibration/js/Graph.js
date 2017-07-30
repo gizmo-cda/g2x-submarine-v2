@@ -92,7 +92,12 @@ class Graph {
             line.setAttributeNS(null, "x2", bbox.x + bbox.width);
             line.setAttributeNS(null, "y2", y);
 
-            line.setAttributeNS(null, "class", "y-major");
+            if (lerp(this.yMin, this.yMax, step / this.yMajorSub) === 0) {
+                line.setAttributeNS(null, "class", "y-major-zero");
+            }
+            else {
+                line.setAttributeNS(null, "class", "y-major");
+            }
 
             this.rootNode.appendChild(line);
         }

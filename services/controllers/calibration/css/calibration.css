@@ -17,6 +17,11 @@ svg {
 	stroke: rgba(200, 200, 200, 0.5);
 }
 
+.y-major-zero {
+	stroke: rgb(200, 200, 200);
+	stroke-width: 2;
+}
+
 .data-line {
 	stroke: rgb(255, 128, 0);
 	stroke-width: 2;

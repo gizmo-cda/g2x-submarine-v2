@@ -95,28 +95,29 @@ function saveSettings() {
 }
 
 function createCharts() {
+    let margin        = 35;
+    let padding       = 15;
+    let width         = 600;
+    let height        = 300;
+    let joyStickSize  = 22;
+    let submarineSize = Math.min(width, height) - joyStickSize;
+
     let chart = document.getElementById("chart");
-
-    let margin = 35;
-    let padding = 15;
-    let width = 600;
-    let height = 300;
-    let joyStickHeight = 22;
-    let subWidth = height - joyStickHeight;
-
-    chart.setAttributeNS(null, "width", margin + subWidth + padding + width + + joyStickHeight + margin);
+    chart.setAttributeNS(null, "width", margin + submarineSize + padding + width + + joyStickSize + margin);
     chart.setAttributeNS(null, "height", margin + height + padding + height + margin);
 
+    // top-left
     submarine = new Submarine(
         margin,
         margin,
-        subWidth,
-        subWidth
+        submarineSize,
+        submarineSize
     );
     submarine.onchange = updateActiveThruster;
 
+    // top-right
     iGraph = new Graph(
-        margin + subWidth + 2 * padding,    // x
+        margin + submarineSize + 2 * padding,    // x
         margin + 0 * (height + padding),    // y
         width,                              // width
         height,                             // height
@@ -128,11 +129,12 @@ function createCharts() {
         10                                  // yMinorSubdivisions
     );
 
+    // bottom-left
     sGraph = new Graph(
         margin,
         margin + 1 * (height + padding),
-        subWidth,
-        subWidth,
+        submarineSize,
+        submarineSize,
         -1, 1,
         -1, 1,
         4,
@@ -142,8 +144,9 @@ function createCharts() {
     );
     sGraph.showJoysticks = false;
 
+    // bottom-right
     iwsGraph = new Graph(
-        margin + subWidth + 2 * padding,
+        margin + submarineSize + 2 * padding,
         margin + 1 * (height + padding),
         width,
         height,
@@ -155,22 +158,11 @@ function createCharts() {
         10
     );
 
+    // initial render
     iGraph.attach(chart);
     sGraph.attach(chart);
     iwsGraph.attach(chart);
     submarine.attach(chart);
-}
-
-function createInterpolator() {
-    let interpolator = new Interpolator();
-
-    interpolator.addIndexValue(0.0, -1.0)
-    interpolator.addIndexValue(90.0, 1.0)
-    interpolator.addIndexValue(180.0, 1.0)
-    interpolator.addIndexValue(270.0, -1.0)
-    interpolator.addIndexValue(360.0, -1.0)
-
-    return interpolator;
 }
 
 function handleKey(e) {

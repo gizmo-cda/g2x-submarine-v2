@@ -32,6 +32,11 @@ function go() {
 }
 
 function processNewData(error, newData) {
+    if (newData.version !== 1) {
+        console.error(`Unsupported data version number '${newData.version}'`);
+        return;
+    }
+
     data = newData;
 
     // create sensitivity data provider

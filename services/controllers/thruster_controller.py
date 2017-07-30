@@ -301,6 +301,7 @@ class ThrusterController:
 
     def get_settings(self):
         return {
+            'version': 1,
             'sensitivity': {
                 'strength': self.sensitivity,
                 'power': self.power
@@ -315,19 +316,22 @@ class ThrusterController:
         }
 
     def set_settings(self, data, save=True):
-        # save settings for future loading
-        if save:
-            with open(SETTINGS_FILE, 'w') as out:
-                out.write(json.dumps(data, indent=2))
+        if data['version'] == 1:
+            # save settings for future loading
+            if save:
+                with open(SETTINGS_FILE, 'w') as out:
+                    out.write(json.dumps(data, indent=2))
 
-        # update current settings
-        self.sensitivity = data['sensitivity']['strength']
-        self.power = data['sensitivity']['power']
-        self.horizontal_left.from_array(data['thrusters'][0])
-        self.vertical_left.from_array(data['thrusters'][1])
-        self.vertical_center.from_array(data['thrusters'][2])
-        self.vertical_right.from_array(data['thrusters'][3])
-        self.horizontal_right.from_array(data['thrusters'][4])
+            # update current settings
+            self.sensitivity = data['sensitivity']['strength']
+            self.power = data['sensitivity']['power']
+            self.horizontal_left.from_array(data['thrusters'][0])
+            self.vertical_left.from_array(data['thrusters'][1])
+            self.vertical_center.from_array(data['thrusters'][2])
+            self.vertical_right.from_array(data['thrusters'][3])
+            self.horizontal_right.from_array(data['thrusters'][4])
+        else:
+            print("Unsupported data version number '{}'".format(data['version']))
 
 
 if __name__ == "__main__":

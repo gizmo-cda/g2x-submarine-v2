@@ -3,9 +3,10 @@ let svgns = "http://www.w3.org/2000/svg";
 var sensitivity, iWithS;
 var iGraph, sGraph, iwsGraph;
 var submarine;
+var activeThruster = 0;
+var editor;
 
 var data;
-var activeThruster = 0;
 
 let names = [
     "Horizontal Left",
@@ -25,6 +26,8 @@ let assignedJoystick = [
 function go() {
     document.onkeydown = handleKey;
     createCharts();
+
+    // NOTE: need to call this last since it is async
     Data.getData(processNewData);
 }
 
@@ -45,6 +48,7 @@ function processNewData(error, newData) {
         return interpolator;
     });
 
+    // draw charts
     updateCharts();
 
     // update range elements
@@ -52,6 +56,17 @@ function processNewData(error, newData) {
     document.getElementById("tLabel").innerHTML = data.sensitivity.strength;
     document.getElementById("power").value = data.sensitivity.power;
     document.getElementById("powerLabel").innerHTML = data.sensitivity.power;
+
+    // setup interpolator editor
+    editor = new InterpolatorEditor(
+        iGraph.xMin,
+        iGraph.xMax,
+        iGraph.yMin,
+        iGraph.yMax,
+        iGraph.graphBoundingBox
+    );
+    editor.interpolator = iGraph.dataProvider;
+    editor.attach(iGraph.rootNode);
 }
 
 function saveSettings() {

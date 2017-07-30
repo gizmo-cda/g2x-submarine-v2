@@ -7,7 +7,16 @@ class Interpolator {
         this.data.push({index: index, value: value});
 
         // make sure items are in ascdending order by index
-        //this.data.sort((a, b) => a.index - b.index);
+        this.data.sort((a, b) => a.index - b.index);
+    }
+
+    removeIndex(index) {
+        for (var i = 0; i < this.data.length; i++) {
+            if (this.data[i].index === index) {
+                this.data.splice(i, 1);
+                break;
+            }
+        }
     }
 
     valueAtIndex(target_index) {

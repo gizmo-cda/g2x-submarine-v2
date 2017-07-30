@@ -207,6 +207,11 @@ function updateCharts() {
     sGraph.dataProvider = sensitivity;
     iwsGraph.dataProvider = iWithS;
 
+    // update editor provider
+    if (editor !== null && editor !== undefined) {
+        editor.interpolator = iGraph.dataProvider;
+    }
+
     // update active joysticks
     var activeJoystick = assignedJoystick[activeThruster];
 

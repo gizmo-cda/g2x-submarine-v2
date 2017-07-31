@@ -144,8 +144,6 @@ class Handle {
         this.dragX += dx;
         this.dragY += dy
 
-        this.rootNode.setAttributeNS(null, "cx", this.x);
-        this.rootNode.setAttributeNS(null, "cy", this.y);
         this.dragNode.setAttributeNS(null, "cx", this.dragX);
         this.dragNode.setAttributeNS(null, "cy", this.dragY);
 
@@ -153,6 +151,8 @@ class Handle {
     }
 
     mouseup(e) {
+        // NOTE: we don't really need to do this here, but its useful to have
+        // the drag area reset its position during debugging
         this.dragX = this.x;
         this.dragY = this.y;
 

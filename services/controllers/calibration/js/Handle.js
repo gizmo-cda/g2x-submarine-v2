@@ -34,6 +34,8 @@ class Handle {
             else {
                 this._x = value;
             }
+
+            this.rootNode.setAttributeNS(null, "cx", this._x);
         }
     }
 
@@ -56,6 +58,8 @@ class Handle {
             else {
                 this._y = value;
             }
+
+            this.rootNode.setAttributeNS(null, "cy", this._y);
         }
     }
 

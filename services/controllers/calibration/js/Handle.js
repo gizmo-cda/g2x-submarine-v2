@@ -117,6 +117,11 @@ class Handle {
         this.lastX = e.x;
         this.lastY = e.y;
 
+        this.dragX = this.x;
+        this.dragY = this.y;
+        this.dragNode.setAttributeNS(null, "cx", this.dragX);
+        this.dragNode.setAttributeNS(null, "cy", this.dragY);
+
         this.rootNode.setAttributeNS(null, "class", "handle-selected");
 
         this.rootNode.removeEventListener("mousedown", this);

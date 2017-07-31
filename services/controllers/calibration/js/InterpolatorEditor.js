@@ -56,19 +56,49 @@ class InterpolatorEditor {
             if (this._interpolator !== null && this._interpolator !== undefined) {
                 let right = this.bbox.x + this.bbox.width;
                 let bottom = this.bbox.x + this.bbox.height;
+                let lastIndex = this._interpolator.data.length - 1;
 
-                this._interpolator.data.forEach(entry => {
+                this._interpolator.data.forEach((entry, index) => {
                     let x = map(entry.index, this.xMin, this.xMax, this.bbox.x, right);
                     let y = map(entry.value, this.yMin, this.yMax, bottom, this.bbox.y);
                     let handle = new Handle(this, x, y);
 
-                    handle.bounds = this.bbox;
+                    if (index === 0) {
+                        handle.bounds = {
+                            x: this.bbox.x,
+                            y: this.bbox.y,
+                            width: 0,
+                            height: this.bbox.height
+                        }
+                    }
+                    else if (index === lastIndex) {
+                        handle.bounds = {
+                            x: this.bbox.x + this.bbox.width,
+                            y: this.bbox.y,
+                            width: 0,
+                            height: this.bbox.height
+                        }
+                    }
+                    else {
+                        handle.bounds = this.bbox;
+                    }
 
                     this.handles.push(handle);
                     handle.attach(this.rootNode);
                 });
             }
         }
+    }
+
+    updateEntry(entryIndex, x, y) {
+        this._interpolator.data.splice(entryIndex, 1);
+
+        let right  = this.bbox.x + this.bbox.width;
+        let bottom = this.bbox.x + this.bbox.height;
+        let index  = map(x, this.bbox.x, right, this.xMin, this.xMax);
+        let value  = map(y, bottom, this.bbox.y, this.yMin, this.yMax);
+
+        this._interpolator.addIndexValue(index, value);
     }
 
     onhandlemove(handle) {
@@ -82,14 +112,24 @@ class InterpolatorEditor {
         }
         
         if (entryIndex != -1) {
-            this._interpolator.data.splice(entryIndex, 1);
+            let lastIndex = this.handles.length - 1;
 
-            let right = this.bbox.x + this.bbox.width;
-            let bottom = this.bbox.x + this.bbox.height;
-            let index = map(handle.x, this.bbox.x, right, this.xMin, this.xMax);
-            let value = map(handle.y, bottom, this.bbox.y, this.yMin, this.yMax);
+            this.updateEntry(entryIndex, handle.x, handle.y);
 
-            this._interpolator.addIndexValue(index, value);
+            if (entryIndex === 0) {
+                let wrappedHandle = this.handles[lastIndex];
+
+                wrappedHandle.y = handle.y;
+
+                this.updateEntry(this.handles.length - 1, wrappedHandle.x, wrappedHandle.y);
+            }
+            else if (entryIndex === lastIndex) {
+                let wrappedHandle = this.handles[0];
+
+                wrappedHandle.y = handle.y;
+
+                this.updateEntry(0, wrappedHandle.x, wrappedHandle.y);
+            }
 
             if (this.onchange !== null && this.onchange !== undefined) {
                 this.onchange();

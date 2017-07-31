@@ -114,6 +114,13 @@ class Handle {
     }
 
     mousedown(e) {
+        if (e.shiftKey) {
+            // TODO: this should be another event type on Handles that the parent
+            // listens for
+            this.parent.onhandleremove(this);
+            return;
+        }
+
         this.lastX = e.x;
         this.lastY = e.y;
 
@@ -147,6 +154,8 @@ class Handle {
         this.dragNode.setAttributeNS(null, "cx", this.dragX);
         this.dragNode.setAttributeNS(null, "cy", this.dragY);
 
+        // NOTE: this should be another event type on Handles that the parent
+        // listens for
         this.parent.onhandlemove(this);
     }
 

@@ -137,6 +137,28 @@ class InterpolatorEditor {
         }
     }
 
+    onhandleremove(handle) {
+        var entryIndex = -1;
+        var lastIndex = this.handles.length - 1;
+
+        for (var i = 0; i <= lastIndex; i++) {
+            if (this.handles[i] === handle) {
+                entryIndex = i;
+                break;
+            }
+        }
+
+        if (entryIndex !== 0 && entryIndex !== lastIndex) {
+            this._interpolator.data.splice(entryIndex, 1);
+            this.handles.splice(entryIndex, 1);
+            handle.detach();
+
+            if (this.onchange !== null && this.onchange !== undefined) {
+                this.onchange();
+            }
+        }
+    }
+
     handleEvent(e) {
         this[e.type](e);
     }

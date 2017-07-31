@@ -171,6 +171,8 @@ function createCharts() {
 }
 
 function handleKey(e) {
+    let lastIndex = data.thrusters.length - 1;
+
     switch (e.keyCode) {
         case 38:
             // up arrow
@@ -184,16 +186,22 @@ function handleKey(e) {
             // left arrow
             if (activeThruster > 0) {
                 activeThruster--;
-                updateCharts();
             }
+            else {
+                activeThruster = lastIndex;
+            }
+            updateCharts();
             break;
 
         case 39:
             // right arrow
-            if (activeThruster < data.thrusters.length - 1) {
+            if (activeThruster < lastIndex) {
                 activeThruster++;
-                updateCharts();
             }
+            else {
+                activeThruster = 0;
+            }
+            updateCharts();
             break;
     }
 }

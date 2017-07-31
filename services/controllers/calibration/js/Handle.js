@@ -95,8 +95,9 @@ class Handle {
 
         dragger.setAttributeNS(null, "cx", this.x);
         dragger.setAttributeNS(null, "cy", this.y);
-        dragger.setAttributeNS(null, "r", 40);
+        dragger.setAttributeNS(null, "r", 50);
         dragger.setAttributeNS(null, "fill", "none");
+        // dragger.setAttributeNS(null, "fill", "white");
         // dragger.setAttributeNS(null, "fill-opacity", 0.25);
         dragger.setAttributeNS(null, "pointer-events", "none");
 

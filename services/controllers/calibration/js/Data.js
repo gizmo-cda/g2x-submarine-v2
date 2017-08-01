@@ -10,7 +10,7 @@ class Data {
     }
 
     static getNamedData(name, cb) {
-        if (name === "" || name === null || name == undefined) {
+        if (name === "" || name === null || name === undefined) {
             this.getData(cb);
         }
         else {

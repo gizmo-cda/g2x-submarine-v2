@@ -9,6 +9,10 @@ fieldset {
 	border: none;
 }
 
+form {
+	margin-left: 10px;
+}
+
 svg {
 	background-color: rgba(200, 200, 200, 0.1);
 }

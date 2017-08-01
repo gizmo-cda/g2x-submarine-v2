@@ -78,9 +78,16 @@ function processNewData(error, newData) {
     }
 }
 
+function loadSettings() {
+
+}
+
 function saveSettings() {
+    var filename = document.getElementById("filename").value;
+
     Data.sendData({
         version: 1,
+        name: filename,
         sensitivity: {
             strength: sensitivity.t,
             power: sensitivity.power

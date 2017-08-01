@@ -48,7 +48,7 @@ NEUTRAL = 369
 FULL_FORWARD = 496
 
 # Use this file to load/store thruster and sensitivity settings
-SETTINGS_FILE = './thruster_settings.json'
+SETTINGS_FILE = 'thruster_settings.json'
 
 
 class ThrusterController:
@@ -319,7 +319,12 @@ class ThrusterController:
         if data['version'] == 1:
             # save settings for future loading
             if save:
-                with open(SETTINGS_FILE, 'w') as out:
+                if data['name'] == "":
+                    filename = SETTINGS_FILE
+                else:
+                    filename = os.path.join("settings", data['name'] + ".json")
+
+                with open(filename, 'w') as out:
                     out.write(json.dumps(data, indent=2))
 
             # update current settings

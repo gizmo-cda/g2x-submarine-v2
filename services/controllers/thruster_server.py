@@ -10,6 +10,8 @@ from thruster_controller import ThrusterController
 # Set default values before processing command line arguments
 SIMULATE = False
 CALIBRATE = False
+VERBOSE = False
+
 # It is possible for a host to have multiple IP addresses. Using 0.0.0.0
 # will listen on all network interfaces on this host
 HOST = "0.0.0.0"
@@ -24,6 +26,8 @@ for i in range(1, len(sys.argv)):
         CALIBRATE = True
     elif arg == "-s" or arg == "--simulate":
         SIMULATE = True
+    elif arg == "-v" or arg == "--verbose":
+        VERBOSE = True
     # TODO: add command-line args for setting host and ports
 
 # create thruster controller globally so we can share it between threads
@@ -85,9 +89,14 @@ def on_new_client(controller, clientsocket, addr):
             break
         else:
             m = Message(msg)
+
             if m.input_type == 0:
+                if VERBOSE:
+                    print("Setting axis {} to {}".format(m.input_index, m.input_value))
                 controller.update_axis(m.input_index, m.input_value)
             elif m.input_type == 1:
+                if VERBOSE:
+                    print("Setting button {} to {}".format(m.input_index, m.input_value))
                 controller.update_button(m.input_index, m.input_value)
 
         # this is a simple confirmation to the client that we have received its

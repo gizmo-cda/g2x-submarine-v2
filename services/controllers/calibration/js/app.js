@@ -63,23 +63,13 @@ function processNewData(error, newData) {
     document.getElementById("powerLabel").innerHTML = data.sensitivity.power;
 
     // setup interpolator editor
-    editor = new InterpolatorEditor(
-        iGraph.xMin,
-        iGraph.xMax,
-        iGraph.yMin,
-        iGraph.yMax,
-        iGraph.graphBoundingBox
-    );
     editor.interpolator = iGraph.dataProvider;
-    editor.attach(iGraph.rootNode);
-    editor.onchange = () => {
-        iGraph.drawData();
-        iwsGraph.drawData();
-    }
 }
 
 function loadSettings() {
+    let name = document.getElementById("filename").value;
 
+    Data.getNamedData(name, processNewData);
 }
 
 function saveSettings() {
@@ -170,11 +160,25 @@ function createCharts() {
         10
     );
 
+    // interpolator editor
+    editor = new InterpolatorEditor(
+        iGraph.xMin,
+        iGraph.xMax,
+        iGraph.yMin,
+        iGraph.yMax,
+        iGraph.graphBoundingBox
+    );
+    editor.onchange = () => {
+        iGraph.drawData();
+        iwsGraph.drawData();
+    }
+
     // initial render
     submarine.attach(chart);
     iGraph.attach(chart);
     sGraph.attach(chart);
     iwsGraph.attach(chart);
+    editor.attach(iGraph.rootNode);
 }
 
 function handleKey(e) {
@@ -223,9 +227,7 @@ function updateCharts() {
     iwsGraph.dataProvider = iWithS;
 
     // update editor provider
-    if (editor !== null && editor !== undefined) {
-        editor.interpolator = iGraph.dataProvider;
-    }
+    editor.interpolator = iGraph.dataProvider;
 
     // update active joysticks
     var activeJoystick = assignedJoystick[activeThruster];

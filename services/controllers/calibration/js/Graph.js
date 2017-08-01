@@ -177,7 +177,8 @@ class Graph {
             this.dataNode = document.createElementNS(svgns, "polyline");
 
             this.dataNode.setAttributeNS(null, "class", "data-line");
-            this.rootNode.appendChild(this.dataNode);
+            // this.rootNode.appendChild(this.dataNode);
+            this.rootNode.insertBefore(this.dataNode, this.rootNode.firstChild);
         }
 
         this.dataNode.setAttributeNS(null, "points", points.join(", "));

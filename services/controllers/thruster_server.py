@@ -43,6 +43,7 @@ def on_calibration_server(controller):
     script_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "calibration")
     css_dir = os.path.join(script_dir, "css")
     js_dir = os.path.join(script_dir, "js")
+    settings_dir = os.path.join(script_dir, "..", "settings")
 
     @route('/')
     def index():
@@ -59,6 +60,10 @@ def on_calibration_server(controller):
     @route('/api/settings')
     def api_settings():
         return controller.get_settings()
+
+    @route('/api/settings/<name>')
+    def api_settings_file(name):
+        return static_file(name + ".json", root=settings_dir)
 
     @put('/api/settings')
     def put_settings():

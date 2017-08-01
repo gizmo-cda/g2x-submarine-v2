@@ -9,6 +9,15 @@ class Data {
         xhr.get('/api/settings', cb);
     }
 
+    static getNamedData(name, cb) {
+        if (name === "" || name === null || name == undefined) {
+            this.getData(cb);
+        }
+        else {
+            xhr.get('/api/settings/' + name, cb);
+        }
+    }
+
     static sendData(data, cb) {
         xhr.put('/api/settings', data, cb);
     }

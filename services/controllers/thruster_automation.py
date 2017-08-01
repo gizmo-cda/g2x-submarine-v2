@@ -12,9 +12,9 @@ JL_V = 1  # left joystick vertical axis
 JR_H = 2  # right joystick horizontal axis
 JR_V = 3  # right joystick vertical axis
 
-AXIS = 0
-BUTTON = 1
-MOTOR = 2
+MOTOR = 0
+AXIS = 1
+BUTTON = 2
 
 HOST = "192.168.0.1"
 PORT = 9999
@@ -88,13 +88,18 @@ print("Connected to server")
 # hold(1)
 # send_message(controller, AXIS, JL_V, 0.0)
 
-# move motor 0 forward, then backward
-ramp(MOTOR, 0, 0.0, 0.5, 0.5)
-hold(0.5)
-ramp(MOTOR, 0, 0.5, 0.0, 0.5)
-hold(0.5)
-ramp(MOTOR, 0, 0.0, -0.5, 0.5)
-hold(0.5)
-ramp(MOTOR, 0, -0.5, 0.0, 0.5)
+# move motors forward, then backward
+# NOTE: range is half-open, for example [0, 5)
+for i in range(0, 5):
+    duration = 0.25
+    max_speed = 0.5
+    ramp(MOTOR, i, 0.0, max_speed, duration)
+    hold(0.5)
+    ramp(MOTOR, i, max_speed, 0.0, duration)
+    hold(0.5)
+    ramp(MOTOR, i, 0.0, -max_speed, duration)
+    hold(0.5)
+    ramp(MOTOR, i, -max_speed, 0.0, duration)
+    hold(0.5)
 
 s.close()

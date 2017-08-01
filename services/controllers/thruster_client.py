@@ -7,6 +7,11 @@ from message import Message
 import platform
 
 
+# Constants for each type of supported input
+MOTOR = 0
+AXIS = 1
+BUTTON = 2
+
 # Each game controller axis returns a value in the closed interval [-1, 1]. We
 # limit the number of decimal places we use with the PRECISION constant. This is
 # done for a few reasons: 1) it makes the numbers more human-friendly (easier to
@@ -139,18 +144,18 @@ while done is False:
         elif event.type == pygame.JOYAXISMOTION:
             # We have a joystick event. Grab which axis this is and the axis'
             # current value
-            type = 0
+            type = AXIS
             if AXIS_MAP is not None and 0 <= event.axis and event.axis < len(AXIS_MAP):
                 index = AXIS_MAP[event.axis]
             else:
                 index = event.axis
             value = round(event.value, PRECISION)
         elif event.type == pygame.JOYBUTTONDOWN:
-            type = 1
+            type = BUTTON
             index = event.button
             value = 1
         elif event.type == pygame.JOYBUTTONUP:
-            type = 1
+            type = BUTTON
             index = event.button
             value = 0
 

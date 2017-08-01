@@ -7,6 +7,10 @@ import _thread
 from message import Message
 from thruster_controller import ThrusterController
 
+MOTOR = 0
+AXIS = 1
+BUTTON = 2
+
 # Set default values before processing command line arguments
 SIMULATE = False
 CALIBRATE = False
@@ -90,18 +94,18 @@ def on_new_client(controller, clientsocket, addr):
         else:
             m = Message(msg)
 
-            if m.input_type == 0:
-                if VERBOSE:
-                    print("Setting axis {} to {}".format(m.input_index, m.input_value))
-                controller.update_axis(m.input_index, m.input_value)
-            elif m.input_type == 1:
-                if VERBOSE:
-                    print("Setting button {} to {}".format(m.input_index, m.input_value))
-                controller.update_button(m.input_index, m.input_value)
-            elif m.input_type == 2:
+            if m.input_type == MOTOR:
                 if VERBOSE:
                     print("Setting motor {} to {}".format(m.input_index, m.input_value))
                 controller.set_motor(m.input_index, m.input_value)
+            elif m.input_type == BUTTON:
+                if VERBOSE:
+                    print("Setting button {} to {}".format(m.input_index, m.input_value))
+                controller.update_button(m.input_index, m.input_value)
+            elif m.input_type == AXIS:
+                if VERBOSE:
+                    print("Setting axis {} to {}".format(m.input_index, m.input_value))
+                controller.update_axis(m.input_index, m.input_value)
 
         # this is a simple confirmation to the client that we have received its
         # message and have processed it correctly. Ideally, this would be more

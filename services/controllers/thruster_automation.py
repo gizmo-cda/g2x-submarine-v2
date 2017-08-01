@@ -12,8 +12,7 @@ JL_V = 1  # left joystick vertical axis
 JR_H = 2  # right joystick horizontal axis
 JR_V = 3  # right joystick vertical axis
 
-# host = "192.168.0.1"
-host = "localhost"
+host = "192.168.0.1"
 port = 9999
 
 # process command line args

@@ -4,6 +4,7 @@ import sys
 import socket
 import time
 from message import Message
+from utils import lerp
 
 
 JL_H = 0  # left joystick horizontal axis
@@ -17,6 +18,8 @@ BUTTON = 1
 
 HOST = "192.168.0.1"
 PORT = 9999
+
+TICK = 1.0 / 60.0
 
 # process command line args
 for i in range(1, len(sys.argv)):
@@ -48,13 +51,38 @@ def send_message(controller, type, index, value):
         print(decoded_response)
 
 
+def hold(seconds):
+    time.sleep(seconds)
+
+
+def ramp(type, index, fromValue, toValue, duration):
+    start = time.time()
+    end = start + duration
+    current = start
+
+    while current <= end:
+        s = (current - start) / duration
+        t = max(0.0, min(s, 1.0))
+        value = lerp(fromValue, toValue, t)
+        send_message(controller, type, index, value)
+        time.sleep(TICK)
+        current = time.time()
+
+    # make sure we end up exactly at our toValue
+    send_message(controller, type, index, toValue)
+
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 print("Connected to server")
 
 # send 50% forward for 1 second
-send_message(controller, AXIS, JL_V, 0.5)
-time.sleep(1)
-send_message(controller, AXIS, JL_V, 0.0)
+ramp(AXIS, JL_V, 0.0, 0.5, 1)
+hold(1)
+ramp(AXIS, JL_V, 0.5, 0.0, 1)
+
+# send_message(controller, AXIS, JL_V, 0.5)
+# hold(1)
+# send_message(controller, AXIS, JL_V, 0.0)
 
 s.close()

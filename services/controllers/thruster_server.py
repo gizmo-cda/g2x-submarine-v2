@@ -98,6 +98,10 @@ def on_new_client(controller, clientsocket, addr):
                 if VERBOSE:
                     print("Setting button {} to {}".format(m.input_index, m.input_value))
                 controller.update_button(m.input_index, m.input_value)
+            elif m.input_type == 2:
+                if VERBOSE:
+                    print("Setting motor {} to {}".format(m.input_index, m.input_value))
+                controller.set_motor(m.input_index, m.input_value)
 
         # this is a simple confirmation to the client that we have received its
         # message and have processed it correctly. Ideally, this would be more

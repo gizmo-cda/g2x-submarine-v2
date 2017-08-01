@@ -12,14 +12,16 @@ JL_V = 1  # left joystick vertical axis
 JR_H = 2  # right joystick horizontal axis
 JR_V = 3  # right joystick vertical axis
 
-controller = 0
 AXIS = 0
 BUTTON = 1
+MOTOR = 2
 
 HOST = "192.168.0.1"
 PORT = 9999
 
 TICK = 1.0 / 60.0
+
+controller = 0
 
 # process command line args
 for i in range(1, len(sys.argv)):
@@ -77,12 +79,22 @@ s.connect((HOST, PORT))
 print("Connected to server")
 
 # send 50% forward for 1 second
-ramp(AXIS, JL_V, 0.0, 0.5, 1)
-hold(1)
-ramp(AXIS, JL_V, 0.5, 0.0, 1)
+# ramp(AXIS, JL_V, 0.0, 0.5, 1)
+# hold(1)
+# ramp(AXIS, JL_V, 0.5, 0.0, 1)
 
+# set 50% forward directly
 # send_message(controller, AXIS, JL_V, 0.5)
 # hold(1)
 # send_message(controller, AXIS, JL_V, 0.0)
+
+# move motor 0 forward, then backward
+ramp(MOTOR, 0, 0.0, 0.5, 0.5)
+hold(0.5)
+ramp(MOTOR, 0, 0.5, 0.0, 0.5)
+hold(0.5)
+ramp(MOTOR, 0, 0.0, -0.5, 0.5)
+hold(0.5)
+ramp(MOTOR, 0, -0.5, 0.0, 0.5)
 
 s.close()

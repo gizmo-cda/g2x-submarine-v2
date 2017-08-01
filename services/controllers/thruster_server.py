@@ -4,12 +4,10 @@ import sys
 import socket
 import atexit
 import _thread
+from input_types import MOTOR, AXIS, BUTTON
 from message import Message
 from thruster_controller import ThrusterController
 
-MOTOR = 0
-AXIS = 1
-BUTTON = 2
 
 # Set default values before processing command line arguments
 SIMULATE = False

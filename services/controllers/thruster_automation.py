@@ -3,6 +3,7 @@
 import sys
 import socket
 import time
+from input_types import MOTOR, AXIS, BUTTON
 from message import Message
 from utils import lerp
 
@@ -11,10 +12,6 @@ JL_H = 0  # left joystick horizontal axis
 JL_V = 1  # left joystick vertical axis
 JR_H = 2  # right joystick horizontal axis
 JR_V = 3  # right joystick vertical axis
-
-MOTOR = 0
-AXIS = 1
-BUTTON = 2
 
 HOST = "192.168.0.1"
 PORT = 9999

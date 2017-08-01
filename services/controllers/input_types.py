@@ -1,0 +1,3 @@
+MOTOR = 0
+AXIS = 1
+BUTTON = 2

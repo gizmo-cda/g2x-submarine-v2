@@ -3,14 +3,10 @@
 import socket
 import atexit
 import pygame
+from input_types import MOTOR, AXIS, BUTTON
 from message import Message
 import platform
 
-
-# Constants for each type of supported input
-MOTOR = 0
-AXIS = 1
-BUTTON = 2
 
 # Each game controller axis returns a value in the closed interval [-1, 1]. We
 # limit the number of decimal places we use with the PRECISION constant. This is

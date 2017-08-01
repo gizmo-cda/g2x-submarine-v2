@@ -61,9 +61,6 @@ function processNewData(error, newData) {
     document.getElementById("tLabel").innerHTML = data.sensitivity.strength;
     document.getElementById("power").value = data.sensitivity.power;
     document.getElementById("powerLabel").innerHTML = data.sensitivity.power;
-
-    // setup interpolator editor
-    editor.interpolator = iGraph.dataProvider;
 }
 
 function loadSettings() {

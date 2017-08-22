@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
+import sys
 import socket
 import atexit
 import pygame
-from input_types import MOTOR, AXIS, BUTTON
+from input_types import AXIS, BUTTON
 from message import Message
 import platform
 
@@ -42,6 +43,13 @@ if platform.system() != "Darwin":
 # controller values to that machine over the network.
 host = "192.168.0.1"
 port = 9999
+
+# process command line args
+for i in range(1, len(sys.argv)):
+    arg = sys.argv[i]
+
+    if arg == "-h" or arg == "--host":
+        host = sys.argv[i + 1]
 
 # create a socket object and connect to specified host/port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

@@ -80,15 +80,15 @@ sudo systemctl enable g2x-thruster.service
 ```
   - Use the following to start, stop, and restart the service:
 ```
-sudo systemctl start wrong-way-2.service
-sudo systemctl stop wrong-way-2.service
-sudo systemctl restart wrong-way-2.service
+sudo systemctl start g2x-thruster.service
+sudo systemctl stop g2x-thruster.service
+sudo systemctl restart g2x-thruster.service
 ```
   - During development, you'll need to stop the service to prevent conflicts
   - If you need to edit `g2x-thruster.service`, you'll need to reload and restart the service:
 ```
 sudo systemctl daemon-reload
-sudo systemctl restart wrong-way-2.service
+sudo systemctl restart g2x-thruster.service
 ```
 
 # Optional

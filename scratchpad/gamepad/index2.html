@@ -101,6 +101,11 @@
 				let result = new GamepadState(gamepad);
 
 				result.onchange = (controller, type, index, oldValue, value) => {
+					// map axis 5 to axis 3 (for Firefox)
+					if (type === AXIS && index === 5) {
+						index = 3;
+					}
+
 					client.sendMessage(controller, type, index, value);
 				}
 

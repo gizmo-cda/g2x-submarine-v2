@@ -1,0 +1,17 @@
+[Unit]
+Description=Gizmo2Xtremes Thruster Server
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/Documents/Projects/g2x-submarine-v2/services/controllers/thruster_server.py -c -s
+WorkingDirectory=/home/pi/Documents/Projects/g2x-submarine-v2/services/controllers
+Restart=always
+RestartSec=10                       # Restart service after 10 seconds if python3 service crashes
+StandardOutput=syslog               # Output to syslog
+StandardError=syslog                # Output to syslog
+SyslogIdentifier=g2x-thruster
+#User=<alternate user>
+#Group=<alternate group>
+#Environment=PORT=8080
+
+[Install]
+WantedBy=multi-user.target

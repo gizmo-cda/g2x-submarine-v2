@@ -61,9 +61,40 @@ static ip_address=192.168.0.1/24
   - On Pi
     - `sudo apt-get install netatalk`
     - `sudo pip3 install adafruit-pca9685`
+    - `sudo pip3 install bottle`
   - On Mac
     - `mount -t afp "afp://pi:<password>@minisub.local/Home Directory" "minisub"
     - `cd minisub`
     - `mkdir -p ~/Documents/Projects`
     - `cd ~/Documents/Projects`
     - `git clone https://github.com/gizmo-cda/g2x-submarine-v2.git`
+    - Create ~/.bash_aliases and add `alias g2x='cd ${HOME}/Documents/Projects/g2x-submarine-v2' to it
+
+# Setup Thruster Service
+  - A useful tutorial for systemd (which Raspbian now uses) can be found at [Run node.js service with systemd](https://www.axllent.org/docs/view/nodejs-service-with-systemd/)
+  - Use the following to install the g2x-thruster service
+```
+sudo cp scripts/g2x-thruster.service /etc/systemd/system/
+sudo chmod 755 /etc/systemd/system/g2x-thruster.service
+sudo systemctl enable g2x-thruster.service
+```
+  - Use the following to start, stop, and restart the service:
+```
+sudo systemctl start wrong-way-2.service
+sudo systemctl stop wrong-way-2.service
+sudo systemctl restart wrong-way-2.service
+```
+  - During development, you'll need to stop the service to prevent conflicts
+  - If you need to edit `g2x-thruster.service`, you'll need to reload and restart the service:
+```
+sudo systemctl daemon-reload
+sudo systemctl restart wrong-way-2.service
+```
+
+# Optional
+  - `sudo apt-get install vim`
+  - add the following to `~/.bash_aliases`
+```
+alias ll='ls -alF
+alias ..='cd ..'
+```

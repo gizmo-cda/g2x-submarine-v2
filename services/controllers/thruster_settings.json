@@ -2,7 +2,7 @@
   "name": "",
   "version": 1,
   "sensitivity": {
-    "strength": "0.3",
+    "strength": 0.3,
     "power": 3
   },
   "thrusters": [

@@ -36,8 +36,11 @@ PRECISION = 3
 # and Raspian
 AXIS_MAP = None
 
-if platform.system() != "Darwin":
+if platform.system() == "Linux":
     AXIS_MAP = [0, 1, 2, 4, 5, 3]
+elif platform.system() == "Windows":
+    AXIS_MAP = [0, 1, 2, 3, 5, 4]
+# NOTE that Darwin comes in, in the expected order
 
 # This is the IP address and port of the server we will connect to. We send
 # controller values to that machine over the network.

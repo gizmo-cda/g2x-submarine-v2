@@ -2,114 +2,66 @@
 	<head>
 		<title>Gamepad API</title>
 		<link rel="stylesheet" type="text/css" href="index.css">
-		<script type="text/javascript" src="./lib/GamepadState.js"></script>
 		<script type="text/javascript" src="./lib/ThrusterClient.js"></script>
+		<script type="text/javascript" src="./lib/GameControllerManager.js"></script>
+		<script type="text/javascript" src="./lib/GameController.js"></script>
 	</head>
 	<body onload="go()">
 		<h1>Gamepad API</h1>
 		<script type="text/javascript">
-			let controllers = {};
-			let client = new ThrusterClient();
+			let manager;
 			
 			function go() {
-				window.addEventListener("gamepadconnected", connect);
-				window.addEventListener("gamepaddisconnected", disconnect);
-				update();
+				manager = new GameControllerManager();
+				manager.onadd = onadd;
+				manager.onremove = onremove;
+				manager.onchange = onchange;
+
+				manager.update();
 			}
 
-			function connect(e) {
-				add(e.gamepad);
-			}
+			function onchange(controller) {
+				let id = "pre" + controller.index;
+				let pre = document.getElementById(id);
+				let result = {};
 
-			function disconnect(e) {
-				remove(e.gamepad);
-			}
+				controller.buttons.forEach((button, index) => {
+					let name = "button " + index;
 
-			function update(e) {
-				scan();
-
-				Object.keys(controllers).forEach(index => {
-					let controller = controllers[index];
-					let id = "pre" + controller.index;
-					let pre = document.getElementById(id);
-					let result = {};
-
-					controller.buttons.forEach((button, index) => {
-						let name = "button " + index;
-
-						result[name] = button.value;
-					});
-
-					controller.axes.forEach((axis, index) => {
-						let name = "axis " + index;
-
-						result[name] = axis; //.toFixed(3);
-					});
-
-					pre.innerHTML = JSON.stringify(result, null, 2);
+					result[name] = button;
 				});
 
-				requestAnimationFrame(update);
+				controller.axes.forEach((axis, index) => {
+					let name = "axis " + index;
+
+					result[name] = axis;
+				});
+
+				pre.innerHTML = JSON.stringify(result, null, 2);
+
+				// requestAnimationFrame(update);
 			}
 
-			function scan() {
-				var gamepads = navigator.getGamepads();
-
-				for (var i = 0; i < gamepads.length; i++) {
-					var gamepad = gamepads[i];
-
-					if (gamepad) {
-						if (gamepad.index in controllers) {
-							// TODO: ???
-							controllers[gamepad.index] = createGamepadState(gamepad);
-						}
-						else {
-							add(gamepad);
-						}
-					}
-				}
-			}
-
-			function add(gamepad) {
-				controllers[gamepad.index] = createGamepadState(gamepad);
-
+			function onadd(controller) {
 				var div = document.createElement("div");
-				div.setAttribute("id", "controller" + gamepad.index);
+				div.setAttribute("id", "controller" + controller.index);
 
 				var header = document.createElement("h1");
-				var headerText = document.createTextNode("gamepad " + gamepad.id);
+				var headerText = document.createTextNode("gamepad " + controller.id);
 				header.appendChild(headerText);
 				div.appendChild(header);
 
 				var pre = document.createElement("pre");
-				pre.setAttribute("id", "pre" + gamepad.index);
+				pre.setAttribute("id", "pre" + controller.index);
 				div.appendChild(pre);
 
 				document.body.appendChild(div);
 			}
 
-			function remove(gamepad) {
-				console.log("removing %s", gamepad.id);
-				controllers[gamepad.index].onchange = null;
-				delete controllers[gamepad.index];
+			function onremove(controller) {
+				var div = document.getElementById("controller" + controller.index);
 
-				var div = document.getElementById("controller" + gamepad.index);
 				document.body.removeChild(div);
-			}
-
-			function createGamepadState(gamepad) {
-				let result = new GamepadState(gamepad);
-
-				result.onchange = (controller, type, index, oldValue, value) => {
-					// map axis 5 to axis 3 (for Firefox)
-					if (type === AXIS && index === 5) {
-						index = 3;
-					}
-
-					client.sendMessage(controller, type, index, value);
-				}
-
-				return result;
 			}
 		</script>
 	</body>

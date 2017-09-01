@@ -11,7 +11,7 @@ class ThrusterClient {
     }
 
     sendMessage(controller, type, index, value) {
-        console.log(`C: ${controller}, T: ${type}, I: ${index}, V: ${value}`);
+        // console.log(`C: ${controller}, T: ${type}, I: ${index}, V: ${value}`);
 
         // build message binary payload per services/controllers/message.py
         let b1 =

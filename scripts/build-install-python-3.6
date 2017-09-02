@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Referenced the following URLs:
+#	https://stackoverflow.com/questions/39089698/how-to-install-python-3-5-on-raspbian-jessie#40187307
+# 	https://liudr.wordpress.com/2016/02/04/install-python-on-raspberry-pi-or-debian/
+# 	http://wyre-it.co.uk/blog/latestpython/
+
+set -e
+
+RELEASE=3.6.2
+
+sudo apt-get update
+sudo apt-get install build-essential tk-dev libc6-dev
+sudo apt-get install libncurses5-dev libncursesw5-dev libreadline6-dev
+sudo apt-get install libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev
+sudo apt-get install libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev
+wget https://www.python.org/ftp/python/${RELEASE}/Python-${RELEASE}.tgz
+tar -zxvf Python-${RELEASE}.tgz
+cd Python-${RELEASE}
+./configure --prefix=/usr/local/opt/python-${RELEASE}
+# NOTE: builds fail randomly when using -j option, so we have to build one
+# thing at a time
+make
+sudo make install

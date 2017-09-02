@@ -1,7 +1,8 @@
 class ThrusterClient {
     constructor(cb) {
         this.cb = cb;
-        this.socket = new WebSocket("ws://127.0.0.1:9997/");
+        // this.socket = new WebSocket("ws://127.0.0.1:9997/");
+        this.socket = new WebSocket("ws://192.168.0.1:9997/");
         this.socket.type = "arraybuffer";
         this.socket.addEventListener("message", (e) => this.message(e));
 

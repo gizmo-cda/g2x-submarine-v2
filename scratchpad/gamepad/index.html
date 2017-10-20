@@ -7,7 +7,17 @@
 		<h1>Gamepad API</h1>
 		<script type="text/javascript">
 			let controllers = {};
-
+			
+			/* NOTE FROM CRISTA: A rough attempt at exclusively storing the controller values that have changed 
+				status from the previous values in the form of a multidimensional array of current and former axis/button information. 
+				I am not sure how sound my logic here is in terms of what we are trying to achieve, 
+				but this is how I interpreted what the code should be doing in order to maintain efficient data traffic 
+				and avoid sending useless values.*/
+			
+			var controller_statuses = []; // multi-dimensional array [[NEWcurrent_controller_status],[current_controller_status]]
+			var current_controller_status = []; //As of now, looks like [1,0,1,..,-0.602,-1.00,..] for buttons and axes, I believe
+			var changed_values = [];
+			
 			function go() {
 				window.addEventListener("gamepadconnected", connect);
 				window.addEventListener("gamepaddisconnected", disconnect);
@@ -24,6 +34,7 @@
 
 			function update(e) {
 				scan();
+				current_controller_status = []; //Resets this array to none at the beginning of a new update
 
 				Object.keys(controllers).forEach(index => {
 					let controller = controllers[index];
@@ -35,17 +46,42 @@
 						let name = "button " + index;
 
 						result[name] = button.value;
+						current_controller_status.append(button.value);
+						// Should I append the full name, so results can be understood by people (since only the updated values will be sent)
+						// Or should I send the int (I'm assuming 1/0 for buttons) so it can be more easily bitmasked in the case that we hold on to that python code rather than reading the values straight the array itself
 					});
 
 					controller.axes.forEach((axis, index) => {
 						let name = "axis " + index;
 
 						result[name] = axis.toFixed(3);
+						current_controller_status.append(axis.value);
 					});
 
 					pre.innerHTML = JSON.stringify(result, null, 2);
 				});
+				controller_statuses.prepend(current_controller_status); //pushes array to front rather than end of set
+				
+				//Iterate through all elements of the previous controller status and the newly defined (current) controller status (always the same length, so the array values used at length condition doesn't matter; I only changed indexes from one for loop to the other to help with readability)
+				// Checks for changes in button/axis states in order to send only the changes values and prevent unneccesary data traffic
+				for(var x = 0; x < controller_statuses[0].length; x++){
+					
+					// Example:
+					
+					//	controller_statuses[0] == [1,0,0,1,..]
+					//	controller_statuses[1] == [1,1,0,1,..]
+					//	Because controller_statuses[0][1] == controller_statuses[1][1], nothing will happen,
+					// 	Since this is not the case for index 1 (i.e. x == 1), the new value will be appended to an array to be sent to the Raspberry Pis
 
+      					if(controller_statuses[0][x] !== controller_statuses[1][x] {
+        					changed_values.append(controller_statuses[0][x]);
+      						}
+    					}
+				}
+				// Should I add something like del controller_statuses[controller_statuses.length - 1] to get rid of the previous controller state once it becomes obselete, or does it really matter?
+				//(I'm not sure if JS has a .remove() or .del() method to call on an array to delete an index or if I'd need a for loop to achieve this)
+				
+				// < TODO: --Crista-- Send changed_values to server w/ websockets at this point/>
 				requestAnimationFrame(update);
 			}
 

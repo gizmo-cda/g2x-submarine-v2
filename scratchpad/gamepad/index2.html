@@ -1,0 +1,68 @@
+<html>
+	<head>
+		<title>Gamepad API</title>
+		<link rel="stylesheet" type="text/css" href="index.css">
+		<script type="text/javascript" src="./lib/ThrusterClient.js"></script>
+		<script type="text/javascript" src="./lib/GameControllerManager.js"></script>
+		<script type="text/javascript" src="./lib/GameController.js"></script>
+	</head>
+	<body onload="go()">
+		<h1>Gamepad API</h1>
+		<script type="text/javascript">
+			let manager;
+			
+			function go() {
+				manager = new GameControllerManager();
+				manager.onadd = onadd;
+				manager.onremove = onremove;
+				manager.onchange = onchange;
+
+				manager.update();
+			}
+
+			function onchange(controller) {
+				let id = "pre" + controller.index;
+				let pre = document.getElementById(id);
+				let result = {};
+
+				controller.buttons.forEach((button, index) => {
+					let name = "button " + index;
+
+					result[name] = button;
+				});
+
+				controller.axes.forEach((axis, index) => {
+					let name = "axis " + index;
+
+					result[name] = axis;
+				});
+
+				pre.innerHTML = JSON.stringify(result, null, 2);
+
+				// requestAnimationFrame(update);
+			}
+
+			function onadd(controller) {
+				var div = document.createElement("div");
+				div.setAttribute("id", "controller" + controller.index);
+
+				var header = document.createElement("h1");
+				var headerText = document.createTextNode("gamepad " + controller.id);
+				header.appendChild(headerText);
+				div.appendChild(header);
+
+				var pre = document.createElement("pre");
+				pre.setAttribute("id", "pre" + controller.index);
+				div.appendChild(pre);
+
+				document.body.appendChild(div);
+			}
+
+			function onremove(controller) {
+				var div = document.getElementById("controller" + controller.index);
+
+				document.body.removeChild(div);
+			}
+		</script>
+	</body>
+</html>

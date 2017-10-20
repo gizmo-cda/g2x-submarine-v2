@@ -2,19 +2,29 @@
 <html>
     <head>
         <title>WebSocket demo</title>
-    </head>
-    <body>
-        <script>
-            var ws = new WebSocket("ws://127.0.0.1:5678/"),
-                messages = document.createElement('ul');
-            ws.onmessage = function (event) {
-                var messages = document.getElementsByTagName('ul')[0],
-                    message = document.createElement('li'),
-                    content = document.createTextNode(event.data);
-                message.appendChild(content);
-                messages.appendChild(message);
-            };
-            document.body.appendChild(messages);
+        <script type="text/javascript" src="../gamepad/lib/ThrusterClient.js"></script>
+        <script type="text/javascript">
+            var client;
+
+            function go() {
+                client = new ThrusterClient(sendData);
+
+                client.message = receiveData;
+            }
+
+            function sendData(evt) {
+                let value = Math.random() * 2.0 - 1.0;
+
+                client.sendMessage(0, 1, 0, value);
+            }
+
+            function receiveData(evt) {
+                console.log(evt.data);
+                setTimeout(sendData, 1000);
+            }
         </script>
+    </head>
+    <body onload="go()">
+
     </body>
 </html>

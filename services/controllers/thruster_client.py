@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
+import sys
 import socket
 import atexit
 import pygame
-from input_types import MOTOR, AXIS, BUTTON
+from input_types import AXIS, BUTTON
 from message import Message
 import platform
 
@@ -35,13 +36,23 @@ PRECISION = 3
 # and Raspian
 AXIS_MAP = None
 
-if platform.system() != "Darwin":
+if platform.system() == "Linux":
     AXIS_MAP = [0, 1, 2, 4, 5, 3]
+elif platform.system() == "Windows":
+    AXIS_MAP = [0, 1, 2, 3, 5, 4]
+# NOTE that Darwin comes in, in the expected order
 
 # This is the IP address and port of the server we will connect to. We send
 # controller values to that machine over the network.
 host = "192.168.0.1"
 port = 9999
+
+# process command line args
+for i in range(1, len(sys.argv)):
+    arg = sys.argv[i]
+
+    if arg == "-h" or arg == "--host":
+        host = sys.argv[i + 1]
 
 # create a socket object and connect to specified host/port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

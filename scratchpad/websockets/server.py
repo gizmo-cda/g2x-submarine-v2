@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
 
 import asyncio
-import datetime
-import random
 import websockets
+from message import Message
 
 
 async def time(websocket, path):
     while True:
-        now = datetime.datetime.utcnow().isoformat() + 'Z'
-        await websocket.send(now)
-        await asyncio.sleep(random.random() * 3)
+        data = await websocket.recv()
 
-start_server = websockets.serve(time, '127.0.0.1', 5678)
+        if len(data) == 0:
+            print("disconnecting client")
+            break
+
+        m = Message(data)
+        print("C: {}, T: {}, I: {}, V: {}".format(
+            m.controller_index, m.input_type, m.input_index, m.input_value
+        ))
+
+        await websocket.send("OK")
+
+start_server = websockets.serve(time, '127.0.0.1', 9997)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()

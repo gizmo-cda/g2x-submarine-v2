@@ -76,8 +76,8 @@ function saveSettings() {
         version: 1,
         name: filename,
         sensitivity: {
-            strength: sensitivity.t,
-            power: sensitivity.power
+            strength: sensitivity.t - 0,
+            power: sensitivity.power - 0
         },
         thrusters: [
             data.thrusters[0].to_array(),

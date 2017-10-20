@@ -32,6 +32,7 @@ VL = 1  # vertical left
 VC = 2  # vertical center
 VR = 3  # vertical right
 HR = 4  # horizontal right
+LIGHT = 5
 
 # Define a series of constants, one for each game controller axis
 JL_H = 0  # left joystick horizontal axis
@@ -40,12 +41,17 @@ JR_H = 2  # right joystick horizontal axis
 JR_V = 3  # right joystick vertical axis
 AL = 4    # left analog button
 AR = 5    # right analog button
+UP = 3
+DOWN = 1
+RESET = 0
+# 271,[320],467
 
 # Define constants for the PWM to run a thruster in full reverse, full forward,
 # or neutral
 FULL_REVERSE = 246
 NEUTRAL = 369
 FULL_FORWARD = 496
+LIGHT_STEP = 0.05
 
 # Use this file to load/store thruster and sensitivity settings
 SETTINGS_FILE = 'thruster_settings.json'
@@ -75,6 +81,7 @@ class ThrusterController:
             self.motor_controller.add_device("VC", VC, 0, NEUTRAL)
             self.motor_controller.add_device("VR", VR, 0, NEUTRAL)
             self.motor_controller.add_device("HR", HR, 0, NEUTRAL)
+            self.motor_controller.add_device("LIGHT", LIGHT, 0, FULL_REVERSE)
         else:
             self.motor_controller = None
 
@@ -151,6 +158,9 @@ class ThrusterController:
         # setup ascent/descent controllers
         self.ascent = -1.0
         self.descent = -1.0
+
+        # setup light
+        self.light = 0.0
 
     def __del__(self):
         '''
@@ -284,8 +294,16 @@ class ThrusterController:
             self.set_motor(VR, front_right_value)
 
     def update_button(self, button, value):
-        # TODO: implement support for adjusting lights
-        pass
+        if button == UP:
+            self.light = min(1.0, self.light + LIGHT_STEP)
+        elif button == DOWN:
+            self.light = max(0.0, self.light - LIGHT_STEP)
+        elif button == RESET:
+            self.light = 0.0
+
+        light_value = map_range(self.light, 0.0, 1.0, -1.0, 1.0)
+        print("button %s, light = %s, light_value = %s" % (button, self.light, light_value))
+        self.set_motor(LIGHT, light_value)
 
     def set_motor(self, motor_number, value):
         if self.motor_controller is not None:
@@ -328,8 +346,8 @@ class ThrusterController:
                     out.write(json.dumps(data, indent=2))
 
             # update current settings
-            self.sensitivity = data['sensitivity']['strength']
-            self.power = data['sensitivity']['power']
+            self.sensitivity = float(data['sensitivity']['strength'])
+            self.power = float(data['sensitivity']['power'])
             self.horizontal_left.from_array(data['thrusters'][0])
             self.vertical_left.from_array(data['thrusters'][1])
             self.vertical_center.from_array(data['thrusters'][2])

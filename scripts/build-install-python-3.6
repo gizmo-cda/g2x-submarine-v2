@@ -29,7 +29,7 @@ sudo apt-get install -y \
 wget https://www.python.org/ftp/python/${RELEASE}/Python-${RELEASE}.tgz
 tar -zxvf Python-${RELEASE}.tgz
 cd Python-${RELEASE}
-./configure --prefix=/usr/local/opt/python-${RELEASE}
+./configure --prefix=/usr
 # NOTE: builds fail randomly when using -j option, so we have to build one
 # thing at a time
 make

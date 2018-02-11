@@ -3,10 +3,10 @@ var MjpegConsumer = require("mjpeg-consumer");
 var FileOnWrite = require("file-on-write");
 
 var config = {
-	"control": {
+	"navigation": {
 		"url": "http://192.168.0.1:8080/stream/video.mjpeg",
 		"writer": new FileOnWrite({ 
-			path: '/Volumes/Shuttle/G2X/video/control',
+			path: '/Volumes/Shuttle/G2X/video/navigation',
 			ext: '.jpg'
 		}),
 		"consumer": new MjpegConsumer()

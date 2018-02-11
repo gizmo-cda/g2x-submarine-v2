@@ -10,14 +10,26 @@ set -e
 RELEASE=3.6.2
 
 sudo apt-get update
-sudo apt-get install build-essential tk-dev libc6-dev
-sudo apt-get install libncurses5-dev libncursesw5-dev libreadline6-dev
-sudo apt-get install libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev
-sudo apt-get install libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev
+sudo apt-get upgrade -y
+sudo apt-get install -y \
+    build-essential \
+    tk-dev \
+    libc6-dev \
+    libncurses5-dev \
+    libncursesw5-dev \
+    libreadline6-dev \
+    libdb5.3-dev \
+    libgdbm-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    libbz2-dev \
+    libexpat1-dev \
+    liblzma-dev \
+    zlib1g-dev
 wget https://www.python.org/ftp/python/${RELEASE}/Python-${RELEASE}.tgz
 tar -zxvf Python-${RELEASE}.tgz
 cd Python-${RELEASE}
-./configure --prefix=/usr/local/opt/python-${RELEASE}
+./configure --prefix=/usr
 # NOTE: builds fail randomly when using -j option, so we have to build one
 # thing at a time
 make

@@ -75,10 +75,31 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 print("Connected to server")
 
-# send 50% forward for 1 second
-# ramp(AXIS, JL_V, 0.0, 0.5, 1)
+# for i in range(0, 4):
+#     for MAX_POWER in (0.5, 0.9):
+#         ramp(AXIS, JL_V, 0.0, MAX_POWER, 1)
+#         hold(30)
+#         ramp(AXIS, JL_V, MAX_POWER, -MAX_POWER, 2)
+#         hold(30)
+#         ramp(AXIS, JL_V, -MAX_POWER, 0.0, 1)
+
+#         ramp(AXIS, JR_V, 0.0, MAX_POWER, 1)
+#         hold(30)
+#         ramp(AXIS, JR_V, MAX_POWER, -MAX_POWER, 2)
+#         hold(30)
+#         ramp(AXIS, JR_V, MAX_POWER, 0.0, 1)
+
+ramp(AXIS, JL_V, 0.0, 0.0, 1)
+ramp(AXIS, JR_V, 0.0, 0.0, 1)
+
+# ramp(AXIS, JL_H, 0.0, 0.5, 1)
 # hold(1)
-# ramp(AXIS, JL_V, 0.5, 0.0, 1)
+# ramp(AXIS, JL_H, 0.5, 0.5, 2)
+# hold(1)
+
+
+# ramp(AXIS, JL_H, 0.0, 0.0, 2)
+# ramp(AXIS, JR_V, 0.0, 0.0, 2)
 
 # set 50% forward directly
 # send_message(controller, AXIS, JL_V, 0.5)
@@ -87,16 +108,16 @@ print("Connected to server")
 
 # move motors forward, then backward
 # NOTE: range is half-open, for example [0, 5)
-for i in range(0, 5):
-    duration = 0.25
-    max_speed = 0.5
-    ramp(MOTOR, i, 0.0, max_speed, duration)
-    hold(0.5)
-    ramp(MOTOR, i, max_speed, 0.0, duration)
-    hold(0.5)
-    ramp(MOTOR, i, 0.0, -max_speed, duration)
-    hold(0.5)
-    ramp(MOTOR, i, -max_speed, 0.0, duration)
-    hold(0.5)
+# for i in range(0, 5):
+#     duration = 0.25
+#     max_speed = 0.5
+#     ramp(MOTOR, i, 0.0, max_speed, duration)
+#     hold(0.5)
+#     ramp(MOTOR, i, max_speed, 0.0, duration)
+#     hold(0.5)
+#     ramp(MOTOR, i, 0.0, -max_speed, duration)
+#     hold(0.5)
+#     ramp(MOTOR, i, -max_speed, 0.0, duration)
+#     hold(0.5)
 
 s.close()
